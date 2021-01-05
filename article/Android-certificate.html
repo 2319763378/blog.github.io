@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>安卓访问网站出现HTTPS问题-何宇航-on line</title><meta name="description" content="部分业余记录的博客-何宇航"><meta name="keywords" content="linux;windows;debian;centos;cisco;网络系统管理;skills39;worldskills;skills53;jam;gameday;aws;云计算;公有云;何宇航"><meta name="HandheldFriendly" content="True"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="google-site-verification" content="q4xnHYM3-sVfNnyEwMGqknU2CTdojzJvQ5nGfN3EJv8"><link rel="shortcut icon" href="/favicon.ico"><link rel="icon" href="/img/icon.png"><link rel="stylesheet" href="//cdn.staticfile.org/font-awesome/5.5.0/css/all.css"><link rel="stylesheet" href="//hyiqie.oss-cn-beijing.aliyuncs.com/js/head1.css"><link rel="stylesheet" href="/style.css"></head></html><body class="l_body"><div classdivclass="d_out" onmouseover="this.className='d_over'" onmouseout="this.className='d_out'"><a title="飞回顶部" href="#0" class="cd-top">Top</a></div><header class="l_header" id="no-header"><div class="wrapper"><div class="nav-main container container--flex"><a class="logo flat-box" href="/"><img class="xwbk-logo" src="/img/worldskills-logo.png"></a><div class="menu"><ul class="h-list"><li><a class="nav-home flat-box" href="/">文章</a></li><li><a class="nav-archives flat-box" href="/archives/index.html">归档</a></li><li><a class="nav- flat-box" href="http://baidu.hyiqie.com/">会百度</a></li><li><a class="nav-public-website flat-box" href="/public-website/website.html">收集</a></li></ul></div><div class="m_search"><form name="searchform" class="form u-search-form"><input type="text" class="input u-search-input" placeholder="搜索内容"> <span class="icon"><i class="fa fa-search fa-fw"></i></span></form></div><ul class="switcher h-list"><li class="s-search"><a class="fa fa-search fa-fw" href="javascript:void(0)"></a></li>&nbsp;&nbsp;<li class="s-menu"><a class="fa fa-bars fa-fw" href="javascript:void(0)"></a></li>&nbsp;&nbsp;</ul></div><div class="nav-sub container container--flex"><a class="logo" href="javascript:void(0)"></a></div></div></header><aside class="menu-phone"><nav><ul><li><a class="nav-home flat-box nav flat-box" href="/">文章</a></li><li><a class="nav-archives flat-box nav flat-box" href="/archives/index.html">归档</a></li><li><a class="nav- flat-box nav flat-box" href="http://baidu.hyiqie.com/">会百度</a></li><li><a class="nav-public-website flat-box nav flat-box" href="/public-website/website.html">收集</a></li></ul></nav></aside><div><div class="container2 clearfix2"><div class="l_main"><article id="post-Android-certificate" class="post white-box article-type-post" itemscope itemprop="blogPost"><section class="meta"><h1 class="title"><center>安卓访问网站出现HTTPS问题</center></h1><center><time><i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp; <span>发表于</span>2019-02-15-星期五&nbsp;&nbsp;|&nbsp;&nbsp; <i class="fas fa-eye fa-fw" aria-hidden="true"></i>&nbsp; <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv">(统计中...)</span>次</span></time></center></section><section class="article typo"><div class="article-entry" itemprop="articleBody"><aside class="l_side2"><section class="m_widget toc-wrapper"><header class="header xuxian"><div style="font-size: 18px">目录</div><div class="wrapper"><a style="margin-right: 30px" class="s-toc rightBtn" title="固定到顶部" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div></header><div class="content"><ul class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-问题"><span class="toc-text">1.问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-解决"><span class="toc-text">2.解决</span></a></li></ul></div></section></aside><h2 id="1-问题"><a href="#1-问题" class="headerlink" title="1.问题"></a>1.问题</h2><pre>
+<center><code2>视乎是因为apache需要链文件.但是我没有所以提示不完整的.</code2></center>
+<img src="http://hyiqie.oss-cn-beijing.aliyuncs.com/cto/2019-2-15_1.png" alt="无法显示" title="15_1">
+</pre><h2 id="2-解决"><a href="#2-解决" class="headerlink" title="2.解决"></a>2.解决</h2><pre>
+<center><code2>我用的是letsencrypt下的证书,所以去看了一下官网.</code2></center>
+<center><code2>于是我直接引用这个链接内容当作chain文件:https://letsencrypt.org/certs/isrgrootx1.pem.txt.访问正常了</code2></center>
+<img src="http://hyiqie.oss-cn-beijing.aliyuncs.com/cto/2019-2-15_2.png" alt="无法显示" title="15_2">
+</pre></div><br><br><section class="meta"><time itemprop="dateUpdated" datetime="2019-03-13T22:14:08+08:00" content="2019-03-13-星期三"><span class="latup-time"><i class="fas fa-pen fa-fw" aria-hidden="true"></i> 本文最后更新于：2019-03-13-星期三</span></time></section><div style="text-align: right"><a href="javascript:" onclick="window.open('http://service.weibo.com/share/share.php?url=https://hyiqie.com&sharesource=weibo&title=安卓访问网站出现HTTPS问题：安卓访问网站出现HTTPS问题<br>今天用手机访问网站发现https证书不完整.于是就这样了....&pic=https://hyiqie.com/img/worldskills-logo.png&appkey=2706825840','','height=400,width=711,left=100,right=100,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-weibo.png"></a>&nbsp;&nbsp; <a href="javascript:" onclick="window.open('https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://hyiqie.com&sharesource=qzone&title=安卓访问网站出现HTTPS问题&pics=https://hyiqie.com/img/worldskills-logo.png&summary=&lt;br&gt;今天用手机访问网站发现https证书不完整.于是就这样了....','','height=598,width=711,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-qzone.png"></a>&nbsp;&nbsp; <a href="javascript:" onclick="window.open('http://connect.qq.com/widget/shareqq/index.html?url=https://hyiqie.com&title=安卓访问网站出现HTTPS问题&pics=https://hyiqie.com/img/worldskills-logo.png&summary=何宇航-on line&desc=&lt;br&gt;今天用手机访问网站发现https证书不完整.于是就这样了....','','height=598,width=711,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-qq.png"></a>&nbsp;&nbsp;</div><div class="article-tags tags"><a href="/tags/Linux/"><i class="fa fa-tag fa-fw" aria-hidden="true"></i>&nbsp;Linux</a>&nbsp;</div><div class="prev-next"><section class="prev"><span class="art-item-left"><h6><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;上一篇</h6><h4><a href="/article/Centos-LAMP-2.html" rel="prev" title="LAMP-2">LAMP-2</a></h4><h6 class="tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp; <a class="tag" href="/tags/Centos/">Centos</a>, <a class="tag" href="/tags/Discuz/">Discuz</a>, <a class="tag" href="/tags/LAMP/">LAMP</a></h6></span></section><section class="next"><span class="art-item-right" aria-hidden="true"><h6>下一篇&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></h6><h4><a href="/article/Centos-LAMP.html" rel="prev" title="LAMP-1">LAMP-1</a></h4><h6 class="tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp; <a class="tag" href="/tags/Centos/">Centos</a>, <a class="tag" href="/tags/Discuz/">Discuz</a>, <a class="tag" href="/tags/LAMP/">LAMP</a></h6></span></section></div></section></article><br><article class="post white-box comments"><section class="article typo"><div class="recommended_posts"><h4><i class="fa fa-bookmark fa-fw" aria-hidden="true"></i>&nbsp;文章推荐</h4><ul><li><a href="https://hyiqie.com/article/Centos-Redis.html">Redis</a></li><li><a href="https://hyiqie.com/article/Centos-LAMP-2.html">LAMP-2</a></li><li><a href="https://hyiqie.com/article/Centos-LAMP.html">LAMP-1</a></li><li><a href="https://hyiqie.com/article/Linux-login-banner.html">Linux-登陆提示</a></li><li><a href="https://hyiqie.com/article/Windows-pam.html">Windows-临时组成员身份</a></li></ul></div><h4><i class="fa fa-comments fa-fw" aria-hidden="true"></i>&nbsp;发表评论</h4><div class="subtitle"><h6><b>文明评论，请勿灌水。</b>为防止恶意评论，请<b>登录账号</b>后发表评论</h6><div><section id="comments"><div id="SOHUCS" sid=""></div></section><script charset="utf-8" src="https://www.hyiqie.com/js/changyan.js"></script></div></div></section></article><script>window.subData = {
+        title: '安卓访问网站出现HTTPS问题',
+        tools: true
+    }</script></div><aside class="l_side"></aside></div></div><footer id="footer" class="clearfix"><div class="footer-copyright"><span>Copyright&nbsp;&copy;&nbsp;2019-2021； <a target="_blank" href="https://beian.miit.gov.cn/">工信备案号:琼ICP备18000058号</a>;<div></div></span> <span id="busuanzi_container_site_pv">| 本站总访问量<span id="busuanzi_value_site_pv">(统计中...)</span>次</span> <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv">(统计中...)</span>人</span> <span class="post-meta-divider">|</span></div><span id="runtime_span"></span><script>function show_runtime(){
+  window.setTimeout("show_runtime()",1000);
+  X=new Date("1/29/2019 1:1:1");
+  Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;
+  a=T/M;A=Math.floor(a);
+  b=(a-A)*24;B=Math.floor(b);
+  c=(b-B)*60;C=Math.floor((b-B)*60);
+  D=Math.floor((c-C)*60);
+  runtime_span.innerHTML="—— 本站已苟活： "+A+"天"+B+"小时"+C+"分"+D+"秒 ——"}show_runtime();</script><div class="footer-hr"></div></footer><script async src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/footer.js"></script><script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><script src="/js/back.top.js"></script><script src="/js/cover.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-1.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-2.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-3.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-4.js"></script><script>document.onkeydown = function(e) {
+    var isie = (document.all) ? true: false;
+    var key;
+    var ev;
+    if (isie) { 
+        key = window.event.keyCode;
+        ev = window.event;
+    } else { 
+        key = e.which;
+        ev = e;
+    }
+    if (key == 9) { 
+        if (isie) {
+            ev.keyCode = 0;
+            ev.returnValue = false;
+        } else {
+            ev.which = 0;
+            ev.preventDefault();
+        }
+    }
+};</script><script defer>var url = window.location.href;
+if(url.indexOf("/page/") >= 0 ) { 
+    
+    document.getElementById("carousel-yc").style.display = "none";
+    
+}</script><script>$(".zdya").each(function(){
+       var len=$(this).text().length; 
+       var kuan=document.body.scrollWidth;
+
+       if(len>30 && kuan>700){
+           var str="";
+           str=$(this).text().substring(0,90)+"...";
+           $(this).html(str);                   
+       }else if (len>30 && kuan<700) {
+            var str="";
+           str=$(this).text().substring(0,80)+"...";
+           $(this).html(str);                   
+       }
+    });</script><script src="/js/jquery.fitvids.js"></script><script>var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+        var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+        var ALGOLIA_API_KEY = "";
+        var ALGOLIA_APP_ID = "";
+        var ALGOLIA_INDEX_NAME = "";
+        var AZURE_SERVICE_NAME = "";
+        var AZURE_INDEX_NAME = "";
+        var AZURE_QUERY_KEY = "";
+        var BAIDU_API_ID = "";
+        var SEARCH_SERVICE = "hexo" || "hexo";
+        var ROOT = "/"||"/";
+        if(!ROOT.endsWith('/'))ROOT += '/';</script><script src="/js/search.js"></script><script src="/js/app.js"></script><script>window.changyan.api.config({
+    appid: 'cytem0G0F',
+    conf: 'prod_a9e68afa064236007944e671fb9d46e8'
+    });</script><script>(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-7.js';
+    }
+    else {
+        bp.src = 'https://hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-8.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();</script><script>var mySwiper = new Swiper ('.swiper-container', {
+    effect: 'slide',
+    loop: true, 
+    autoplay: true,
+    pagination: {
+      el: '.swiper-pagination',
+    },
+  
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    
+  })</script><script>document.body.oncopy = function() { 
+swal(
+{        title: "复制成功",
+        text: "如需转载文章请注意声明原文出处，谢谢合作！",
+        timer: 2000,
+        showConfirmButton: false});
+};</script><script>document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState == 'hidden') {
+        normal_title = document.title;
+        document.title = '祝我年少有为';
+    } else document.title = normal_title;
+});</script><script>(function(T,h,i,n,k,P,a,g,e){g=function(){P=h.createElement(i);a=h.getElementsByTagName(i)[0];P.src=k;P.charset="utf-8";P.async=1;a.parentNode.insertBefore(P,a)};T["ThinkPageWeatherWidgetObject"]=n;T[n]||(T[n]=function(){(T[n].q=T[n].q||[]).push(arguments)});T[n].l=+new Date();if(T.attachEvent){T.attachEvent("onload",g)}else{T.addEventListener("load",g,false)}}(window,document,"script","tpwidget","//widget.seniverse.com/widget/chameleon.js"))</script><script>tpwidget("init", {
+    "flavor": "bubble",
+    "location": "WX4FBXXFKE4F",
+    "geolocation": "enabled",
+    "position": "top-right",
+    "margin": "80px 40px",
+    "language": "zh-chs",
+    "unit": "c",
+    "theme": "chameleon",
+    "uid": "UF9D50315B",
+    "hash": "1538686c3447922b81705a019b95c6af"
+});
+tpwidget("show");</script><div class="cover"></div></body>

@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>K8S-Install-何宇航-on line</title><meta name="description" content="部分业余记录的博客-何宇航"><meta name="keywords" content="linux;windows;debian;centos;cisco;网络系统管理;skills39;worldskills;skills53;jam;gameday;aws;云计算;公有云;何宇航"><meta name="HandheldFriendly" content="True"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="google-site-verification" content="q4xnHYM3-sVfNnyEwMGqknU2CTdojzJvQ5nGfN3EJv8"><link rel="shortcut icon" href="/favicon.ico"><link rel="icon" href="/img/icon.png"><link rel="stylesheet" href="//cdn.staticfile.org/font-awesome/5.5.0/css/all.css"><link rel="stylesheet" href="//hyiqie.oss-cn-beijing.aliyuncs.com/js/head1.css"><link rel="stylesheet" href="/style.css"></head></html><body class="l_body"><div classdivclass="d_out" onmouseover="this.className='d_over'" onmouseout="this.className='d_out'"><a title="飞回顶部" href="#0" class="cd-top">Top</a></div><header class="l_header" id="no-header"><div class="wrapper"><div class="nav-main container container--flex"><a class="logo flat-box" href="/"><img class="xwbk-logo" src="/img/worldskills-logo.png"></a><div class="menu"><ul class="h-list"><li><a class="nav-home flat-box" href="/">文章</a></li><li><a class="nav-archives flat-box" href="/archives/index.html">归档</a></li><li><a class="nav- flat-box" href="http://baidu.hyiqie.com/">会百度</a></li><li><a class="nav-public-website flat-box" href="/public-website/website.html">收集</a></li></ul></div><div class="m_search"><form name="searchform" class="form u-search-form"><input type="text" class="input u-search-input" placeholder="搜索内容"> <span class="icon"><i class="fa fa-search fa-fw"></i></span></form></div><ul class="switcher h-list"><li class="s-search"><a class="fa fa-search fa-fw" href="javascript:void(0)"></a></li>&nbsp;&nbsp;<li class="s-menu"><a class="fa fa-bars fa-fw" href="javascript:void(0)"></a></li>&nbsp;&nbsp;</ul></div><div class="nav-sub container container--flex"><a class="logo" href="javascript:void(0)"></a></div></div></header><aside class="menu-phone"><nav><ul><li><a class="nav-home flat-box nav flat-box" href="/">文章</a></li><li><a class="nav-archives flat-box nav flat-box" href="/archives/index.html">归档</a></li><li><a class="nav- flat-box nav flat-box" href="http://baidu.hyiqie.com/">会百度</a></li><li><a class="nav-public-website flat-box nav flat-box" href="/public-website/website.html">收集</a></li></ul></nav></aside><div><div class="container2 clearfix2"><div class="l_main"><article id="post-K8S-Install" class="post white-box article-type-post" itemscope itemprop="blogPost"><section class="meta"><h1 class="title"><center>K8S-Install</center></h1><center><time><i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp; <span>发表于</span>2019-04-26-星期五&nbsp;&nbsp;|&nbsp;&nbsp; <i class="fas fa-eye fa-fw" aria-hidden="true"></i>&nbsp; <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv">(统计中...)</span>次</span></time></center></section><section class="article typo"><div class="article-entry" itemprop="articleBody"><aside class="l_side2"><section class="m_widget toc-wrapper"><header class="header xuxian"><div style="font-size: 18px">目录</div><div class="wrapper"><a style="margin-right: 30px" class="s-toc rightBtn" title="固定到顶部" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div></header><div class="content"><ul class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#K8S环境搭建"><span class="toc-text">K8S环境搭建</span></a><ul class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Master"><span class="toc-text">1. Master</span></a><ul class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-Master-安装"><span class="toc-text">1.1 Master-安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-Master-etcd配置"><span class="toc-text">1.2 Master-etcd配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-Master-api配置"><span class="toc-text">1.3 Master-api配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-Master-config配置"><span class="toc-text">1.4 Master-config配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-Master-启动程序"><span class="toc-text">1.5 Master-启动程序</span></a></li></ul></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Node"><span class="toc-text">2. Node</span></a><ul class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Node-安装"><span class="toc-text">2.1 Node-安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Node-config配置"><span class="toc-text">2.2 Node-config配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-Node-kubelet配置"><span class="toc-text">2.3 Node-kubelet配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-Node-启动程序"><span class="toc-text">2.4 Node-启动程序</span></a></li></ul></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-配置网络"><span class="toc-text">3. 配置网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-测试节点并配置Web"><span class="toc-text">4.测试节点并配置Web</span></a><ul class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-查询节点是否可用"><span class="toc-text">4.1 查询节点是否可用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-上传镜像和启动文件并编辑"><span class="toc-text">4.2 上传镜像和启动文件并编辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-访问Web报错并解决"><span class="toc-text">4.2 访问Web报错并解决</span></a></li></ul></li></ul></li></ul></div></section></aside><aside class="l_side2"><div id="toc-div" class="content"></div></aside><h1 id="K8S环境搭建"><a href="#K8S环境搭建" class="headerlink" title="K8S环境搭建"></a>K8S环境搭建</h1><center>我的环境是Centos7.4!2台服务器:Master、Node1 –（Kubernetes v1.5.2）</center><br><center>192.168.237.135-<code>server</code>|192.168.237.132-<code>server-2</code></center><pre>
+<center><code2>↓原理</code2></center>
+1.Kubernetes（k8s）是自动化容器操作的开源平台，这些操作包括部署，调度和节点集群间扩展.
+2.自动化容器的部署和复制.
+3.随时扩展或收缩容器规模.
+4.将容器组织成组，并且提供容器间的负载均衡.
+5.很容易地升级应用程序容器的新版本.
+6.提供容器弹性，如果容器失效就替换它等.
+- Kubelect Master：Master节点负责对外提供一系列管理集群的API接口，并且通过和Minion节点交互来实现对集群的操作管理.
+- Api-server：用户和kubernetes集群交互的入口，封装了核心对象的增删改查操作，提供了RESTFul风格的API接口，通过etcd来实现持久化并维护对象的一致性.
+- Scheduler：负责集群资源的调度和管理，例如当有pod异常退出需要重新分配机器时，scheduler通过一定的调度算法从而找到最合适的节点.
+- Controller-manager：主要是用于保证replication Controller定义的复制数量和实际运行的pod数量一致，另外还保证了从service到pod的映射关系总是最新的.
+- Kubelet：运行在minion节点，负责和节点上的Docker交互，例如启停容器，监控运行状态等.
+- Proxy：运行在minion节点，负责为pod提供代理功能，会定期从etcd获取service信息，并根据service信息通过修改iptables来实现流量转发（最初的版本是直接通过程序提供转发功能，效率较低.），将流量转发到要访问的pod所在的节点上去.
+- Etcd：etcd 是一个分布式一致性k-v存储系统数据库，可用于服务注册发现与共享配置储数据库，用来存储kubernetes的信息的,etcd组件作为一个高可用、强一致性的服务发现存储仓库，渐渐为开发人员所关注。在云计算时代，如何让服务快速透明地接入到计算集群中，如何让共享配置信息快速被集群中的所有机器发现，更为重要的是，如何构建这样一套高可用、安全、易于部署以及响应快速的服务集群，etcd的诞生就是为解决该问题.
+- Flannel：Flannel是CoreOS团队针对Kubernetes设计的一个覆盖网络（Overlay Network）工具，Flannel目的就是为集群中的所有节点重新规划IP地址的使用规则，从而使得不同节点上的容器能够获得同属一个内网且不重复的IP地址，并让属于不同节点上的容器能够直接通过内网IP通信。
+<center><code2>↓操作</code2></center>
+1.etcd节点配置，设置监听地址并启动.
+2.Master-api配置关联etcd节点并开放地址,并关闭帐号认证.
+3.Master-config配置关联api地址.
+4.Master-启动上面的服务:kube-apiserver、kube-controller-manager、kube-scheduler.
+5.Node-config配置关联api地址.
+6.Node-kubelet配置关联api地址,设置节点名称.
+7.Node-启动:kube-proxy、kubelet、docker.
+8.在所有节点上面配置flanneld.
+9.Node-导入两个镜像:bestwu/kubernetes-dashboard-amd64:v1.6.3、pod-infrastructure.
+10.Master-创建两个文件dashboard-service.yaml、dashboard-controller.yaml.
+11.Web报错就在Node节点上开启转发功能.
+</pre><h2 id="1-Master"><a href="#1-Master" class="headerlink" title="1. Master"></a>1. Master</h2><h3 id="1-1-Master-安装"><a href="#1-1-Master-安装" class="headerlink" title="1.1 Master-安装"></a>1.1 Master-安装</h3><pre>
+[root@server ~]# <code>yum install kubernetes-master etcd flannel docker -y</code>
+</pre><h3 id="1-2-Master-etcd配置"><a href="#1-2-Master-etcd配置" class="headerlink" title="1.2 Master-etcd配置"></a>1.2 Master-etcd配置</h3><pre>
+<center><code2>↓修改etcd的配置文件.</code2></center>
+[root@server ~]# <code>vim /etc/etcd/etcd.conf</code>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ETCD_DATA_DIR=<span class="string">"/var/lib/etcd/default.etcd"</span>												<span class="comment">#键值存放的地方.</span></span><br><span class="line">ETCD_LISTEN_CLIENT_URLS=<span class="string">"http://localhost:2379,http://192.168.237.135:2379"</span>				<span class="comment">#监听地址.</span></span><br><span class="line">ETCD_NAME=<span class="string">"default"</span>																		<span class="comment">#节点名称（多节点不可以一样）.</span></span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS=<span class="string">"http://localhost:2379,http://192.168.237.135:2379"</span>			<span class="comment">#对外宣告地址.</span></span><br></pre></td></tr></table></figure>
+
+</pre><h3 id="1-3-Master-api配置"><a href="#1-3-Master-api配置" class="headerlink" title="1.3 Master-api配置"></a>1.3 Master-api配置</h3><p><center><code3>↓↓说明↓↓</code3></center></p><p><code3>api模块</code3></p><pre>
+[root@server ~]# <code>vim /etc/kubernetes/apiserver</code>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">KUBE_API_ADDRESS=<span class="string">"--insecure-bind-address=0.0.0.0"</span>								<span class="comment">#api开放的地址.</span></span><br><span class="line">KUBE_API_PORT=<span class="string">"--port=8080"</span>														<span class="comment">#api开放的端口.</span></span><br><span class="line">KUBE_ETCD_SERVERS=<span class="string">"--etcd-servers=http://192.168.237.135:2379"</span>					<span class="comment">#etcd的地址.</span></span><br><span class="line">KUBE_SERVICE_ADDRESSES=<span class="string">"--service-cluster-ip-range=10.254.0.0/16"</span></span><br><span class="line">KUBE_ADMISSION_CONTROL=<span class="string">"--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDe</span></span><br><span class="line"><span class="string">ny,ResourceQuota"</span></span><br><span class="line">KUBE_API_ARGS=<span class="string">""</span></span><br></pre></td></tr></table></figure>
+
+</pre><h3 id="1-4-Master-config配置"><a href="#1-4-Master-config配置" class="headerlink" title="1.4 Master-config配置"></a>1.4 Master-config配置</h3><pre>
+[root@server ~]# <code>vim /etc/kubernetes/config</code>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">KUBE_LOGTOSTDERR=<span class="string">"--logtostderr=true"</span>	</span><br><span class="line">KUBE_LOG_LEVEL=<span class="string">"--v=0"</span>									<span class="comment">#日志等级.</span></span><br><span class="line">KUBE_ALLOW_PRIV=<span class="string">"--allow-privileged=false"</span>				<span class="comment">#是否让容器开启特权模式.</span></span><br><span class="line">KUBE_MASTER=<span class="string">"--master=http://192.168.237.135:8080"</span>		<span class="comment">#关联api地址.</span></span><br></pre></td></tr></table></figure>
+
+</pre><h3 id="1-5-Master-启动程序"><a href="#1-5-Master-启动程序" class="headerlink" title="1.5 Master-启动程序"></a>1.5 Master-启动程序</h3><pre>
+<center><code2>↓重启etcd服务.</code2></center>
+[root@server ~]# <code>systemctl restart etcd</code>
+<center><code2>↓启动api服务.</code2></center>
+[root@server ~]# <code>systemctl start kube-apiserver</code>
+[root@server ~]# <code>systemctl start kube-controller-manager</code>
+[root@server ~]# <code>systemctl start kube-scheduler</code>
+</pre><h2 id="2-Node"><a href="#2-Node" class="headerlink" title="2. Node"></a>2. Node</h2><h3 id="2-1-Node-安装"><a href="#2-1-Node-安装" class="headerlink" title="2.1 Node-安装"></a>2.1 Node-安装</h3><pre>
+[root@server-2 ~]# <code>yum install kubernetes-node docker flannel *rhsm* -y</code>
+</pre><h3 id="2-2-Node-config配置"><a href="#2-2-Node-config配置" class="headerlink" title="2.2 Node-config配置"></a>2.2 Node-config配置</h3><pre>
+[root@server-2 ~]# <code>vim /etc/kubernetes/config</code>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KUBE_MASTER=<span class="string">"--master=http://192.168.237.135:8080"</span>		<span class="comment">#关联api地址.</span></span><br></pre></td></tr></table></figure>
+
+</pre><h3 id="2-3-Node-kubelet配置"><a href="#2-3-Node-kubelet配置" class="headerlink" title="2.3 Node-kubelet配置"></a>2.3 Node-kubelet配置</h3><pre>
+[root@server-2 ~]# <code>vim /etc/kubernetes/kubelet</code>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">KUBELET_ADDRESS=<span class="string">"--address=0.0.0.0"</span></span><br><span class="line">KUBELET_PORT=<span class="string">"--port=10250"</span></span><br><span class="line">KUBELET_HOSTNAME=<span class="string">"--hostname-override=192.168.237.132"</span>						<span class="comment">#节点名称.</span></span><br><span class="line">KUBELET_API_SERVER=<span class="string">"--api-servers=http://192.168.237.135:8080"</span></span><br><span class="line">KUBELET_POD_INFRA_CONTAINER=<span class="string">"--pod-infra-container-image=registry.access.redhat.com/rhel7/pod-infrastructure:latest"</span></span><br><span class="line">KUBELET_ARGS=<span class="string">""</span></span><br></pre></td></tr></table></figure>
+
+</pre><h3 id="2-4-Node-启动程序"><a href="#2-4-Node-启动程序" class="headerlink" title="2.4 Node-启动程序"></a>2.4 Node-启动程序</h3><pre>
+[root@server-2 ~]# <code>systemctl start kube-proxy</code>
+[root@server-2 ~]# <code>systemctl start kubelet</code>
+[root@server-2 ~]# <code>systemctl start docker</code>
+</pre><h2 id="3-配置网络"><a href="#3-配置网络" class="headerlink" title="3. 配置网络"></a>3. 配置网络</h2><pre>
+<center><code2>↓节点配置flanneld网络.</code2></center>
+[root@server ~]# <code>vim /etc/sysconfig/flanneld</code>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FLANNEL_ETCD_ENDPOINTS=<span class="string">"http://192.168.237.135:2379"</span>			<span class="comment">#关联ETCD.</span></span><br><span class="line">FLANNEL_ETCD_PREFIX=<span class="string">"/atomic.io/network"</span></span><br></pre></td></tr></table></figure>
+
+[root@server-2 ~]# <code>vim /etc/sysconfig/flanneld</code>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FLANNEL_ETCD_ENDPOINTS=<span class="string">"http://192.168.237.135:2379"</span>			<span class="comment">#关联ETCD.</span></span><br><span class="line">FLANNEL_ETCD_PREFIX=<span class="string">"/atomic.io/network"</span></span><br></pre></td></tr></table></figure>
+
+<center><code2>↓Master添加一个etcd网络.</code2></center>
+[root@server ~]# <code>etcdctl mk /atomic.io/network/config '{"Network":"172.17.0.0/16"}'</code>
+{"Network":"172.17.0.0/16"}
+<center><code2>↓启动flanneld网络.</code2></center>
+[root@server ~]# <code>systemctl start flanneld</code>
+[root@server-2 ~]# <code>systemctl start flanneld</code>
+<center><code2>↓重启docker（这时候docker的网络就变成flanneld网段了）.</code2></center>
+[root@server-2 ~]# <code>systemctl restart docker</code>
+
+</pre><h2 id="4-测试节点并配置Web"><a href="#4-测试节点并配置Web" class="headerlink" title="4.测试节点并配置Web"></a>4.测试节点并配置Web</h2><h3 id="4-1-查询节点是否可用"><a href="#4-1-查询节点是否可用" class="headerlink" title="4.1 查询节点是否可用"></a>4.1 查询节点是否可用</h3><pre>
+[root@server ~]# <code>kubectl get nodes</code>
+NAME              STATUS    AGE
+192.168.237.131   Ready     7m
+192.168.237.132   Ready     20h
+</pre><h3 id="4-2-上传镜像和启动文件并编辑"><a href="#4-2-上传镜像和启动文件并编辑" class="headerlink" title="4.2 上传镜像和启动文件并编辑"></a>4.2 上传镜像和启动文件并编辑</h3><pre>
+<center><code2>↓下载导入镜像(Node节点需开启转发).</code2></center>
+[root@server-2 ~]# <code>cd /data/images/</code>
+[root@server-2 images]# <code>ls</code>
+pod-infrastructure.tgz
+[root@server-2 images]# <code>docker load -i pod-infrastructure.tgz</code>
+<center><code2>↓更改镜像名称（和Node节点kubelet中的pod关联）.</code2></center>
+[root@server-2 images]# <code>docker tag 99965fb98423 registry.access.redhat.com/rhel7/pod-infrastructure</code>
+[root@server-2 images]# <code>docker pull bestwu/kubernetes-dashboard-amd64:v1.6.3</code>
+<center><code2>↓更改镜像名称（和Master节点dashboard-controller中的pod关联）.</code2></center>
+[root@server-2 images]# <code>docker tag 691a82db1ecd bestwu/kubernetes-dashboard-amd64:v1.6.3</code>
+<center><code2>↓在Master节点上面导入两个个启动文件.</code2></center>
+[root@server ~]# <code>cd /data/docker/</code>
+[root@server docker]# <code>ls</code>
+dashboard-controller.yaml  dashboard-service.yaml
+[root@server docker]# <code>vim dashboard-controller.yaml</code>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">args:</span></span><br><span class="line">  - --apiserver-host=<span class="string">http:</span><span class="comment">//192.168.237.135:8080				#只需要修改api地址.</span></span><br></pre></td></tr></table></figure>
+
+<center><code2>↓创建两个yaml.</code2></center>
+[root@server docker]# <code>kubectl create -f dashboard-service.yaml</code>
+service "kubernetes-dashboard" created
+[root@server docker]# <code>kubectl create -f dashboard-controller.yaml</code>
+deployment "kubernetes-dashboard" created
+<center><code2>↓可以查找到Web就启动了.</code2></center>
+[root@server docker]# <code>kubectl get pods --namespace kube-system</code>
+NAME                                    READY     STATUS    RESTARTS   AGE
+kubernetes-dashboard-2128778602-f0vzf   1/1       Running   0          11s
+</pre><h3 id="4-2-访问Web报错并解决"><a href="#4-2-访问Web报错并解决" class="headerlink" title="4.2 访问Web报错并解决"></a>4.2 访问Web报错并解决</h3><pre>
+<img src="http://hyiqie.oss-cn-beijing.aliyuncs.com/cto/2019-4-28_1.png" alt="无法显示" title="访问报错">
+<center><code2>↓开启转发.</code2></center>
+[root@client ~]# <code>iptables -P FORWARD ACCEPT</code>
+<img src="http://hyiqie.oss-cn-beijing.aliyuncs.com/cto/2019-4-28_2.png" alt="无法显示" title="访问成功">
+</pre></div><br><br><section class="meta"><time itemprop="dateUpdated" datetime="2019-05-09T09:42:00+08:00" content="2019-05-09-星期四"><span class="latup-time"><i class="fas fa-pen fa-fw" aria-hidden="true"></i> 本文最后更新于：2019-05-09-星期四</span></time></section><div style="text-align: right"><a href="javascript:" onclick="window.open('http://service.weibo.com/share/share.php?url=https://hyiqie.com&sharesource=weibo&title=K8S-Install：K8S-InstallKubernetes（k8s）是自动化容器操作的开源平台，这些操作包括部署，调度和节点集群间扩展....&pic=https://hyiqie.com/img/worldskills-logo.png&appkey=2706825840','','height=400,width=711,left=100,right=100,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-weibo.png"></a>&nbsp;&nbsp; <a href="javascript:" onclick="window.open('https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://hyiqie.com&sharesource=qzone&title=K8S-Install&pics=https://hyiqie.com/img/worldskills-logo.png&summary=Kubernetes（k8s）是自动化容器操作的开源平台，这些操作包括部署，调度和节点集群间扩展....','','height=598,width=711,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-qzone.png"></a>&nbsp;&nbsp; <a href="javascript:" onclick="window.open('http://connect.qq.com/widget/shareqq/index.html?url=https://hyiqie.com&title=K8S-Install&pics=https://hyiqie.com/img/worldskills-logo.png&summary=何宇航-on line&desc=Kubernetes（k8s）是自动化容器操作的开源平台，这些操作包括部署，调度和节点集群间扩展....','','height=598,width=711,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-qq.png"></a>&nbsp;&nbsp;</div><div class="article-tags tags"><a href="/tags/Centos/"><i class="fa fa-tag fa-fw" aria-hidden="true"></i>&nbsp;Centos</a>&nbsp; <a href="/tags/K8S/"><i class="fa fa-tag fa-fw" aria-hidden="true"></i>&nbsp;K8S</a>&nbsp;</div><div class="prev-next"><section class="prev"><span class="art-item-left"><h6><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;上一篇</h6><h4><a href="/article/TCP-IP.html" rel="prev" title="TCP/IP">TCP/IP</a></h4><h6 class="tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp; <a class="tag" href="/tags/Centos/">Centos</a>, <a class="tag" href="/tags/TCP/">TCP</a></h6></span></section><section class="next"><span class="art-item-right" aria-hidden="true"><h6>下一篇&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></h6><h4><a href="/article/Linux-Iptables-Firewalld.html" rel="prev" title="Linux-防火墙">Linux-防火墙</a></h4><h6 class="tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp; <a class="tag" href="/tags/Centos/">Centos</a>, <a class="tag" href="/tags/Firewall/">Firewall</a></h6></span></section></div></section></article><br><article class="post white-box comments"><section class="article typo"><div class="recommended_posts"><h4><i class="fa fa-bookmark fa-fw" aria-hidden="true"></i>&nbsp;文章推荐</h4><ul><li><a href="https://hyiqie.com/article/Linux-OSS-Mount.html">阿里云OSS挂载</a></li><li><a href="https://hyiqie.com/article/TCP-IP.html">TCP/IP</a></li><li><a href="https://hyiqie.com/article/Linux-Iptables-Firewalld.html">Linux-防火墙</a></li><li><a href="https://hyiqie.com/article/ELK-Redis.html">ELK-Redis</a></li><li><a href="https://hyiqie.com/article/ELK-Kibana-upgrade.html">ELK-Kibana-upgrade</a></li></ul></div><h4><i class="fa fa-comments fa-fw" aria-hidden="true"></i>&nbsp;发表评论</h4><div class="subtitle"><h6><b>文明评论，请勿灌水。</b>为防止恶意评论，请<b>登录账号</b>后发表评论</h6><div><section id="comments"><div id="SOHUCS" sid=""></div></section><script charset="utf-8" src="https://www.hyiqie.com/js/changyan.js"></script></div></div></section></article><script>window.subData = {
+        title: 'K8S-Install',
+        tools: true
+    }</script></div><aside class="l_side"></aside></div></div><footer id="footer" class="clearfix"><div class="footer-copyright"><span>Copyright&nbsp;&copy;&nbsp;2019-2021； <a target="_blank" href="https://beian.miit.gov.cn/">工信备案号:琼ICP备18000058号</a>;<div></div></span> <span id="busuanzi_container_site_pv">| 本站总访问量<span id="busuanzi_value_site_pv">(统计中...)</span>次</span> <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv">(统计中...)</span>人</span> <span class="post-meta-divider">|</span></div><span id="runtime_span"></span><script>function show_runtime(){
+  window.setTimeout("show_runtime()",1000);
+  X=new Date("1/29/2019 1:1:1");
+  Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;
+  a=T/M;A=Math.floor(a);
+  b=(a-A)*24;B=Math.floor(b);
+  c=(b-B)*60;C=Math.floor((b-B)*60);
+  D=Math.floor((c-C)*60);
+  runtime_span.innerHTML="—— 本站已苟活： "+A+"天"+B+"小时"+C+"分"+D+"秒 ——"}show_runtime();</script><div class="footer-hr"></div></footer><script async src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/footer.js"></script><script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><script src="/js/back.top.js"></script><script src="/js/cover.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-1.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-2.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-3.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-4.js"></script><script>document.onkeydown = function(e) {
+    var isie = (document.all) ? true: false;
+    var key;
+    var ev;
+    if (isie) { 
+        key = window.event.keyCode;
+        ev = window.event;
+    } else { 
+        key = e.which;
+        ev = e;
+    }
+    if (key == 9) { 
+        if (isie) {
+            ev.keyCode = 0;
+            ev.returnValue = false;
+        } else {
+            ev.which = 0;
+            ev.preventDefault();
+        }
+    }
+};</script><script defer>var url = window.location.href;
+if(url.indexOf("/page/") >= 0 ) { 
+    
+    document.getElementById("carousel-yc").style.display = "none";
+    
+}</script><script>$(".zdya").each(function(){
+       var len=$(this).text().length; 
+       var kuan=document.body.scrollWidth;
+
+       if(len>30 && kuan>700){
+           var str="";
+           str=$(this).text().substring(0,90)+"...";
+           $(this).html(str);                   
+       }else if (len>30 && kuan<700) {
+            var str="";
+           str=$(this).text().substring(0,80)+"...";
+           $(this).html(str);                   
+       }
+    });</script><script src="/js/jquery.fitvids.js"></script><script>var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+        var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+        var ALGOLIA_API_KEY = "";
+        var ALGOLIA_APP_ID = "";
+        var ALGOLIA_INDEX_NAME = "";
+        var AZURE_SERVICE_NAME = "";
+        var AZURE_INDEX_NAME = "";
+        var AZURE_QUERY_KEY = "";
+        var BAIDU_API_ID = "";
+        var SEARCH_SERVICE = "hexo" || "hexo";
+        var ROOT = "/"||"/";
+        if(!ROOT.endsWith('/'))ROOT += '/';</script><script src="/js/search.js"></script><script src="/js/app.js"></script><script>window.changyan.api.config({
+    appid: 'cytem0G0F',
+    conf: 'prod_a9e68afa064236007944e671fb9d46e8'
+    });</script><script>(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-7.js';
+    }
+    else {
+        bp.src = 'https://hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-8.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();</script><script>var mySwiper = new Swiper ('.swiper-container', {
+    effect: 'slide',
+    loop: true, 
+    autoplay: true,
+    pagination: {
+      el: '.swiper-pagination',
+    },
+  
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    
+  })</script><script>document.body.oncopy = function() { 
+swal(
+{        title: "复制成功",
+        text: "如需转载文章请注意声明原文出处，谢谢合作！",
+        timer: 2000,
+        showConfirmButton: false});
+};</script><script>document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState == 'hidden') {
+        normal_title = document.title;
+        document.title = '祝我年少有为';
+    } else document.title = normal_title;
+});</script><script>(function(T,h,i,n,k,P,a,g,e){g=function(){P=h.createElement(i);a=h.getElementsByTagName(i)[0];P.src=k;P.charset="utf-8";P.async=1;a.parentNode.insertBefore(P,a)};T["ThinkPageWeatherWidgetObject"]=n;T[n]||(T[n]=function(){(T[n].q=T[n].q||[]).push(arguments)});T[n].l=+new Date();if(T.attachEvent){T.attachEvent("onload",g)}else{T.addEventListener("load",g,false)}}(window,document,"script","tpwidget","//widget.seniverse.com/widget/chameleon.js"))</script><script>tpwidget("init", {
+    "flavor": "bubble",
+    "location": "WX4FBXXFKE4F",
+    "geolocation": "enabled",
+    "position": "top-right",
+    "margin": "80px 40px",
+    "language": "zh-chs",
+    "unit": "c",
+    "theme": "chameleon",
+    "uid": "UF9D50315B",
+    "hash": "1538686c3447922b81705a019b95c6af"
+});
+tpwidget("show");</script><div class="cover"></div></body>

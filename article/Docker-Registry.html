@@ -1,0 +1,165 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Docker-私有仓库-何宇航-on line</title><meta name="description" content="部分业余记录的博客-何宇航"><meta name="keywords" content="linux;windows;debian;centos;cisco;网络系统管理;skills39;worldskills;skills53;jam;gameday;aws;云计算;公有云;何宇航"><meta name="HandheldFriendly" content="True"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="google-site-verification" content="q4xnHYM3-sVfNnyEwMGqknU2CTdojzJvQ5nGfN3EJv8"><link rel="shortcut icon" href="/favicon.ico"><link rel="icon" href="/img/icon.png"><link rel="stylesheet" href="//cdn.staticfile.org/font-awesome/5.5.0/css/all.css"><link rel="stylesheet" href="//hyiqie.oss-cn-beijing.aliyuncs.com/js/head1.css"><link rel="stylesheet" href="/style.css"></head></html><body class="l_body"><div classdivclass="d_out" onmouseover="this.className='d_over'" onmouseout="this.className='d_out'"><a title="飞回顶部" href="#0" class="cd-top">Top</a></div><header class="l_header" id="no-header"><div class="wrapper"><div class="nav-main container container--flex"><a class="logo flat-box" href="/"><img class="xwbk-logo" src="/img/worldskills-logo.png"></a><div class="menu"><ul class="h-list"><li><a class="nav-home flat-box" href="/">文章</a></li><li><a class="nav-archives flat-box" href="/archives/index.html">归档</a></li><li><a class="nav- flat-box" href="http://baidu.hyiqie.com/">会百度</a></li><li><a class="nav-public-website flat-box" href="/public-website/website.html">收集</a></li></ul></div><div class="m_search"><form name="searchform" class="form u-search-form"><input type="text" class="input u-search-input" placeholder="搜索内容"> <span class="icon"><i class="fa fa-search fa-fw"></i></span></form></div><ul class="switcher h-list"><li class="s-search"><a class="fa fa-search fa-fw" href="javascript:void(0)"></a></li>&nbsp;&nbsp;<li class="s-menu"><a class="fa fa-bars fa-fw" href="javascript:void(0)"></a></li>&nbsp;&nbsp;</ul></div><div class="nav-sub container container--flex"><a class="logo" href="javascript:void(0)"></a></div></div></header><aside class="menu-phone"><nav><ul><li><a class="nav-home flat-box nav flat-box" href="/">文章</a></li><li><a class="nav-archives flat-box nav flat-box" href="/archives/index.html">归档</a></li><li><a class="nav- flat-box nav flat-box" href="http://baidu.hyiqie.com/">会百度</a></li><li><a class="nav-public-website flat-box nav flat-box" href="/public-website/website.html">收集</a></li></ul></nav></aside><div><div class="container2 clearfix2"><div class="l_main"><article id="post-Docker-Registry" class="post white-box article-type-post" itemscope itemprop="blogPost"><section class="meta"><h1 class="title"><center>Docker-私有仓库</center></h1><center><time><i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp; <span>发表于</span>2019-04-11-星期四&nbsp;&nbsp;|&nbsp;&nbsp; <i class="fas fa-eye fa-fw" aria-hidden="true"></i>&nbsp; <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv">(统计中...)</span>次</span></time></center></section><section class="article typo"><div class="article-entry" itemprop="articleBody"><aside class="l_side2"><section class="m_widget toc-wrapper"><header class="header xuxian"><div style="font-size: 18px">目录</div><div class="wrapper"><a style="margin-right: 30px" class="s-toc rightBtn" title="固定到顶部" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div></header><div class="content"><ul class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker私有仓库"><span class="toc-text">Docker私有仓库</span></a><ul class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-从官网获取私有仓库容器"><span class="toc-text">1. 从官网获取私有仓库容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-修改Docker配置文件"><span class="toc-text">2. 修改Docker配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-运行私有仓库容器"><span class="toc-text">2. 运行私有仓库容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-上传镜像到仓库"><span class="toc-text">3. 上传镜像到仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-测试"><span class="toc-text">4. 测试</span></a></li></ul></li></ul></div></section></aside><aside class="l_side2"><div id="toc-div" class="content"></div></aside><h1 id="Docker私有仓库"><a href="#Docker私有仓库" class="headerlink" title="Docker私有仓库"></a>Docker私有仓库</h1><center>我的环境是Centos7.4!1台服务器:Server</center><br><center>192.168.237.128-<code>server</code></center><pre>
+<center><code2>↓简介</code2></center>
+Docker仓库分为公共仓库和私有仓库，基于registry可以搭建本地私有仓库，使用私有仓库的优点如下：
+1.节省网络带宽，针对于每个镜像不用去Docker官网仓库下载；
+2.下载Docker镜像从本地私有仓库中下载；
+3.组件公司内部私有仓库，方便各部门使用，服务器管理更加统一；
+4.可以基于GIT或者SVN、Jenkins更新本地Docker私有仓库镜像版本.
+官方提供Docker Registry来构建本地私有仓库，目前最新版本为v2，最新版的docker已不再支持v1，Registry v2使用Go语言编写，在性能和安全性上做了很多优化，重新设计了镜像的存储格式.
+<center><code2>↓操作</code2></center>
+1.修改配置文件指定仓库地址.
+2.获取仓库容器镜像并允许.
+3.就可以push上传了.
+</pre><h2 id="1-从官网获取私有仓库容器"><a href="#1-从官网获取私有仓库容器" class="headerlink" title="1. 从官网获取私有仓库容器"></a>1. 从官网获取私有仓库容器</h2><pre>
+[root@server ~]# <code>docker pull registry</code>
+</pre><h2 id="2-修改Docker配置文件"><a href="#2-修改Docker配置文件" class="headerlink" title="2. 修改Docker配置文件"></a>2. 修改Docker配置文件</h2><pre>
+[root@server ~]# <code>vim /etc/sysconfig/docker</code>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;center&gt;&lt;code2&gt;↓将原来的OPTIONS注释添加下面这条.&lt;<span class="string">/code2</span>&gt;&lt;<span class="string">/center</span>&gt;</span><br><span class="line">OPTIONS='<span class="params">--selinux-enabled</span> <span class="params">--log-driver=journald</span> <span class="params">--signature-verification=false</span> <span class="params">--insecure-registry</span> 192.168.237.128<span class="function">:5000</span>'</span><br><span class="line">ADD_REGISTRY='<span class="params">--add-registry</span> 192.168.237.128<span class="function">:5000</span>'</span><br></pre></td></tr></table></figure>
+
+<center><code2>↓重启Docker程序.</code2></center>
+[root@server ~]# <code>systemctl restart docker</code>
+</pre><h2 id="2-运行私有仓库容器"><a href="#2-运行私有仓库容器" class="headerlink" title="2. 运行私有仓库容器"></a>2. 运行私有仓库容器</h2><pre>
+<center><code2>↓仓库默认镜像存放的目录.</code2></center>
+[root@server ~]# <code>mkdir -p /data/registry</code>
+<center><code2>↓运行容器(-v是映射目录):一般情况仓库在容器内的/var/lib/registry目录,但是如果容器被删除了,仓库中的镜像也没了,所有我们就将本地目录映射到/var/lib/registry.</code2></center>
+[root@server ~]# <code>docker run -itd -p 5000:5000 -v /data/registry:/var/lib/registry docker.io/registry</code> 
+3d78855cf89ce248c2e46fac9485337fef9d5638250f3648d9ff652364bcba01
+</pre><h2 id="3-上传镜像到仓库"><a href="#3-上传镜像到仓库" class="headerlink" title="3. 上传镜像到仓库"></a>3. 上传镜像到仓库</h2><pre>
+<center><code2>↓更改镜像地址（不然就上传到官网去了）.</code2></center>
+[root@server ~]# <code>docker tag docker.io/nginx:latest 192.168.237.128:5000/nginx:latest</code>
+<center><code2>↓多出一个镜像.</code2></center>
+[root@server ~]# <code>docker images</code>
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+192.168.237.128:5000/nginx   latest              2bcb04bdb83f        2 weeks ago         109 MB
+<center><code2>↓上传镜像到5000端口:就是容器仓库中.</code2></center>
+[root@server ~]# <code>docker push 192.168.237.128:5000/nginx:latest</code>
+The push refers to a repository [192.168.237.128:5000/nginx]
+7e274c0effe8: Pushed 
+dd0338cdfab3: Pushed 
+5dacd731af1b: Pushed 
+latest: digest: sha256:dabecc7dece2fff98fb00add2f0b525b7cd4a2cacddcc27ea4a15a7922ea47ea size: 948
+</pre><h2 id="4-测试"><a href="#4-测试" class="headerlink" title="4. 测试"></a>4. 测试</h2><pre>
+<center><code2>↓查看仓库里的镜像.</code2></center>
+[root@server ~]# <code>curl -XGET http://192.168.237.128:5000/v2/_catalog</code>
+{"repositories":["nginx"]}
+<center><code2>↓查看nginx镜像中的tag（url中的nginx是镜像名）.</code2></center>
+[root@server ~]# <code>curl -XGET http://192.168.237.128:5000/v2/nginx/tags/list</code>
+{"name":"nginx","tags":["latest","v1"]}
+<center><code2>↓客户端从私有仓库获取镜像(5-8日新加).</code2></center>
+[root@client ~]# <code>vim /etc/sysconfig/docker</code>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ADD_REGISTRY='--add-registry 192.168.237.128:<span class="number">5000</span>'			<span class="meta">#让客户端默认寻找这个仓库找镜像.</span></span><br></pre></td></tr></table></figure>
+
+[root@server ~]# <code>docker pull nginx:latest</code>
+<center><code2>↓如果没有配置上面的参数就使用下方的方法获取（指定地址）.</code2></center>
+[root@server ~]# <code>docker pull 192.168.237.128:5000/nginx:latest</code>
+</pre></div><br><br><section class="meta"><time itemprop="dateUpdated" datetime="2019-05-08T16:25:42+08:00" content="2019-05-08-星期三"><span class="latup-time"><i class="fas fa-pen fa-fw" aria-hidden="true"></i> 本文最后更新于：2019-05-08-星期三</span></time></section><div style="text-align: right"><a href="javascript:" onclick="window.open('http://service.weibo.com/share/share.php?url=https://hyiqie.com&sharesource=weibo&title=Docker-私有仓库：Docker-私有仓库Docker仓库主要用于存放Docker镜像，Docker仓库分为公共仓库和私有仓库.这里演示私有仓库....&pic=https://hyiqie.com/img/worldskills-logo.png&appkey=2706825840','','height=400,width=711,left=100,right=100,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-weibo.png"></a>&nbsp;&nbsp; <a href="javascript:" onclick="window.open('https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://hyiqie.com&sharesource=qzone&title=Docker-私有仓库&pics=https://hyiqie.com/img/worldskills-logo.png&summary=Docker仓库主要用于存放Docker镜像，Docker仓库分为公共仓库和私有仓库.这里演示私有仓库....','','height=598,width=711,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-qzone.png"></a>&nbsp;&nbsp; <a href="javascript:" onclick="window.open('http://connect.qq.com/widget/shareqq/index.html?url=https://hyiqie.com&title=Docker-私有仓库&pics=https://hyiqie.com/img/worldskills-logo.png&summary=何宇航-on line&desc=Docker仓库主要用于存放Docker镜像，Docker仓库分为公共仓库和私有仓库.这里演示私有仓库....','','height=598,width=711,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-qq.png"></a>&nbsp;&nbsp;</div><div class="article-tags tags"><a href="/tags/Centos/"><i class="fa fa-tag fa-fw" aria-hidden="true"></i>&nbsp;Centos</a>&nbsp;</div><div class="prev-next"><section class="prev"><span class="art-item-left"><h6><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;上一篇</h6><h4><a href="/article/Docker-Resource-limit.html" rel="prev" title="Docker-资源限制和监控">Docker-资源限制和监控</a></h4><h6 class="tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp; <a class="tag" href="/tags/Centos/">Centos</a>, <a class="tag" href="/tags/Docker/">Docker</a></h6></span></section><section class="next"><span class="art-item-right" aria-hidden="true"><h6>下一篇&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></h6><h4><a href="/article/Docker-make-image-2.html" rel="prev" title="Docker-image（Dockerfile）">Docker-image（Dockerfile）</a></h4><h6 class="tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp; <a class="tag" href="/tags/Centos/">Centos</a>, <a class="tag" href="/tags/Docker/">Docker</a></h6></span></section></div></section></article><br><article class="post white-box comments"><section class="article typo"><div class="recommended_posts"><h4><i class="fa fa-bookmark fa-fw" aria-hidden="true"></i>&nbsp;文章推荐</h4><ul><li><a href="https://hyiqie.com/article/Docker-Network.html">Docker-网络模式</a></li><li><a href="https://hyiqie.com/article/Docker-Resource-limit.html">Docker-资源限制和监控</a></li><li><a href="https://hyiqie.com/article/Docker-make-image-2.html">Docker-image（Dockerfile）</a></li><li><a href="https://hyiqie.com/article/Docker-make-image-1.html">Docker-image（commit|export|save）</a></li><li><a href="https://hyiqie.com/article/Docker-Privileges.html">Docker-环境-Privileges</a></li></ul></div><h4><i class="fa fa-comments fa-fw" aria-hidden="true"></i>&nbsp;发表评论</h4><div class="subtitle"><h6><b>文明评论，请勿灌水。</b>为防止恶意评论，请<b>登录账号</b>后发表评论</h6><div><section id="comments"><div id="SOHUCS" sid=""></div></section><script charset="utf-8" src="https://www.hyiqie.com/js/changyan.js"></script></div></div></section></article><script>window.subData = {
+        title: 'Docker-私有仓库',
+        tools: true
+    }</script></div><aside class="l_side"></aside></div></div><footer id="footer" class="clearfix"><div class="footer-copyright"><span>Copyright&nbsp;&copy;&nbsp;2019-2021； <a target="_blank" href="https://beian.miit.gov.cn/">工信备案号:琼ICP备18000058号</a>;<div></div></span> <span id="busuanzi_container_site_pv">| 本站总访问量<span id="busuanzi_value_site_pv">(统计中...)</span>次</span> <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv">(统计中...)</span>人</span> <span class="post-meta-divider">|</span></div><span id="runtime_span"></span><script>function show_runtime(){
+  window.setTimeout("show_runtime()",1000);
+  X=new Date("1/29/2019 1:1:1");
+  Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;
+  a=T/M;A=Math.floor(a);
+  b=(a-A)*24;B=Math.floor(b);
+  c=(b-B)*60;C=Math.floor((b-B)*60);
+  D=Math.floor((c-C)*60);
+  runtime_span.innerHTML="—— 本站已苟活： "+A+"天"+B+"小时"+C+"分"+D+"秒 ——"}show_runtime();</script><div class="footer-hr"></div></footer><script async src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/footer.js"></script><script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><script src="/js/back.top.js"></script><script src="/js/cover.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-1.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-2.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-3.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-4.js"></script><script>document.onkeydown = function(e) {
+    var isie = (document.all) ? true: false;
+    var key;
+    var ev;
+    if (isie) { 
+        key = window.event.keyCode;
+        ev = window.event;
+    } else { 
+        key = e.which;
+        ev = e;
+    }
+    if (key == 9) { 
+        if (isie) {
+            ev.keyCode = 0;
+            ev.returnValue = false;
+        } else {
+            ev.which = 0;
+            ev.preventDefault();
+        }
+    }
+};</script><script defer>var url = window.location.href;
+if(url.indexOf("/page/") >= 0 ) { 
+    
+    document.getElementById("carousel-yc").style.display = "none";
+    
+}</script><script>$(".zdya").each(function(){
+       var len=$(this).text().length; 
+       var kuan=document.body.scrollWidth;
+
+       if(len>30 && kuan>700){
+           var str="";
+           str=$(this).text().substring(0,90)+"...";
+           $(this).html(str);                   
+       }else if (len>30 && kuan<700) {
+            var str="";
+           str=$(this).text().substring(0,80)+"...";
+           $(this).html(str);                   
+       }
+    });</script><script src="/js/jquery.fitvids.js"></script><script>var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+        var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+        var ALGOLIA_API_KEY = "";
+        var ALGOLIA_APP_ID = "";
+        var ALGOLIA_INDEX_NAME = "";
+        var AZURE_SERVICE_NAME = "";
+        var AZURE_INDEX_NAME = "";
+        var AZURE_QUERY_KEY = "";
+        var BAIDU_API_ID = "";
+        var SEARCH_SERVICE = "hexo" || "hexo";
+        var ROOT = "/"||"/";
+        if(!ROOT.endsWith('/'))ROOT += '/';</script><script src="/js/search.js"></script><script src="/js/app.js"></script><script>window.changyan.api.config({
+    appid: 'cytem0G0F',
+    conf: 'prod_a9e68afa064236007944e671fb9d46e8'
+    });</script><script>(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-7.js';
+    }
+    else {
+        bp.src = 'https://hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-8.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();</script><script>var mySwiper = new Swiper ('.swiper-container', {
+    effect: 'slide',
+    loop: true, 
+    autoplay: true,
+    pagination: {
+      el: '.swiper-pagination',
+    },
+  
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    
+  })</script><script>document.body.oncopy = function() { 
+swal(
+{        title: "复制成功",
+        text: "如需转载文章请注意声明原文出处，谢谢合作！",
+        timer: 2000,
+        showConfirmButton: false});
+};</script><script>document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState == 'hidden') {
+        normal_title = document.title;
+        document.title = '祝我年少有为';
+    } else document.title = normal_title;
+});</script><script>(function(T,h,i,n,k,P,a,g,e){g=function(){P=h.createElement(i);a=h.getElementsByTagName(i)[0];P.src=k;P.charset="utf-8";P.async=1;a.parentNode.insertBefore(P,a)};T["ThinkPageWeatherWidgetObject"]=n;T[n]||(T[n]=function(){(T[n].q=T[n].q||[]).push(arguments)});T[n].l=+new Date();if(T.attachEvent){T.attachEvent("onload",g)}else{T.addEventListener("load",g,false)}}(window,document,"script","tpwidget","//widget.seniverse.com/widget/chameleon.js"))</script><script>tpwidget("init", {
+    "flavor": "bubble",
+    "location": "WX4FBXXFKE4F",
+    "geolocation": "enabled",
+    "position": "top-right",
+    "margin": "80px 40px",
+    "language": "zh-chs",
+    "unit": "c",
+    "theme": "chameleon",
+    "uid": "UF9D50315B",
+    "hash": "1538686c3447922b81705a019b95c6af"
+});
+tpwidget("show");</script><div class="cover"></div></body>

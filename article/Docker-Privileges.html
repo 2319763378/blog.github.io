@@ -1,0 +1,111 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Docker-环境-Privileges-何宇航-on line</title><meta name="description" content="部分业余记录的博客-何宇航"><meta name="keywords" content="linux;windows;debian;centos;cisco;网络系统管理;skills39;worldskills;skills53;jam;gameday;aws;云计算;公有云;何宇航"><meta name="HandheldFriendly" content="True"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="google-site-verification" content="q4xnHYM3-sVfNnyEwMGqknU2CTdojzJvQ5nGfN3EJv8"><link rel="shortcut icon" href="/favicon.ico"><link rel="icon" href="/img/icon.png"><link rel="stylesheet" href="//cdn.staticfile.org/font-awesome/5.5.0/css/all.css"><link rel="stylesheet" href="//hyiqie.oss-cn-beijing.aliyuncs.com/js/head1.css"><link rel="stylesheet" href="/style.css"></head></html><body class="l_body"><div classdivclass="d_out" onmouseover="this.className='d_over'" onmouseout="this.className='d_out'"><a title="飞回顶部" href="#0" class="cd-top">Top</a></div><header class="l_header" id="no-header"><div class="wrapper"><div class="nav-main container container--flex"><a class="logo flat-box" href="/"><img class="xwbk-logo" src="/img/worldskills-logo.png"></a><div class="menu"><ul class="h-list"><li><a class="nav-home flat-box" href="/">文章</a></li><li><a class="nav-archives flat-box" href="/archives/index.html">归档</a></li><li><a class="nav- flat-box" href="http://baidu.hyiqie.com/">会百度</a></li><li><a class="nav-public-website flat-box" href="/public-website/website.html">收集</a></li></ul></div><div class="m_search"><form name="searchform" class="form u-search-form"><input type="text" class="input u-search-input" placeholder="搜索内容"> <span class="icon"><i class="fa fa-search fa-fw"></i></span></form></div><ul class="switcher h-list"><li class="s-search"><a class="fa fa-search fa-fw" href="javascript:void(0)"></a></li>&nbsp;&nbsp;<li class="s-menu"><a class="fa fa-bars fa-fw" href="javascript:void(0)"></a></li>&nbsp;&nbsp;</ul></div><div class="nav-sub container container--flex"><a class="logo" href="javascript:void(0)"></a></div></div></header><aside class="menu-phone"><nav><ul><li><a class="nav-home flat-box nav flat-box" href="/">文章</a></li><li><a class="nav-archives flat-box nav flat-box" href="/archives/index.html">归档</a></li><li><a class="nav- flat-box nav flat-box" href="http://baidu.hyiqie.com/">会百度</a></li><li><a class="nav-public-website flat-box nav flat-box" href="/public-website/website.html">收集</a></li></ul></nav></aside><div><div class="container2 clearfix2"><div class="l_main"><article id="post-Docker-Privileges" class="post white-box article-type-post" itemscope itemprop="blogPost"><section class="meta"><h1 class="title"><center>Docker-环境-Privileges</center></h1><center><time><i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp; <span>发表于</span>2019-04-10-星期三&nbsp;&nbsp;|&nbsp;&nbsp; <i class="fas fa-eye fa-fw" aria-hidden="true"></i>&nbsp; <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv">(统计中...)</span>次</span></time></center></section><section class="article typo"><div class="article-entry" itemprop="articleBody"><aside class="l_side2"><div id="toc-div" class="content" style="display:none"><section class="m_widget toc-wrapper"><header class="header xuxian"><div style="font-size: 18px">目录</div><div class="wrapper"><a style="margin-right: 30px" class="s-toc rightBtn" title="固定到顶部" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div></header><div class="content"><ul class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#当Yum失败解决方案（privileged）"><span class="toc-text">当Yum失败解决方案（privileged）</span></a><ul class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-做个小实验（Centos6的容器开SSH）"><span class="toc-text">1. 做个小实验（Centos6的容器开SSH）</span></a></li></ul></li></ul></div></section></div></aside><script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script><div id="hbe-security"><div class="hbe-input-container"><input type="password" class="hbe-form-control" id="pass" placeholder="Sorry,This page requires a password!."><label for="pass">Sorry,This page requires a password!.</label><div class="bottom-line"></div></div></div><div id="decryptionError" style="display: none">Incorrect Password!</div><div id="noContentError" style="display: none">No content to display!</div><div id="encrypt-blog" style="display:none">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</div><script src="/lib/crypto-js.js"></script><script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet"></div><br><br><section class="meta"><time itemprop="dateUpdated" datetime="2019-04-10T20:51:08+08:00" content="2019-04-10-星期三"><span class="latup-time"><i class="fas fa-pen fa-fw" aria-hidden="true"></i> 本文最后更新于：2019-04-10-星期三</span></time></section><div style="text-align: right"><a href="javascript:" onclick="window.open('http://service.weibo.com/share/share.php?url=https://hyiqie.com&sharesource=weibo&title=Docker-环境-Privileges：Docker-环境-PrivilegesDocker中生存环境介绍和在Docker中Yum失败后的解决方案....&pic=https://hyiqie.com/img/worldskills-logo.png&appkey=2706825840','','height=400,width=711,left=100,right=100,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-weibo.png"></a>&nbsp;&nbsp; <a href="javascript:" onclick="window.open('https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://hyiqie.com&sharesource=qzone&title=Docker-环境-Privileges&pics=https://hyiqie.com/img/worldskills-logo.png&summary=Docker中生存环境介绍和在Docker中Yum失败后的解决方案....','','height=598,width=711,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-qzone.png"></a>&nbsp;&nbsp; <a href="javascript:" onclick="window.open('http://connect.qq.com/widget/shareqq/index.html?url=https://hyiqie.com&title=Docker-环境-Privileges&pics=https://hyiqie.com/img/worldskills-logo.png&summary=何宇航-on line&desc=Docker中生存环境介绍和在Docker中Yum失败后的解决方案....','','height=598,width=711,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-qq.png"></a>&nbsp;&nbsp;</div><div class="article-tags tags"><a href="/tags/Centos/"><i class="fa fa-tag fa-fw" aria-hidden="true"></i>&nbsp;Centos</a>&nbsp; <a href="/tags/Docker/"><i class="fa fa-tag fa-fw" aria-hidden="true"></i>&nbsp;Docker</a>&nbsp;</div><div class="prev-next"><section class="prev"><span class="art-item-left"><h6><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;上一篇</h6><h4><a href="/article/Docker-make-image-1.html" rel="prev" title="Docker-image（commit|export|save）">Docker-image（commit|export|save）</a></h4><h6 class="tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp; <a class="tag" href="/tags/Centos/">Centos</a>, <a class="tag" href="/tags/Docker/">Docker</a></h6></span></section><section class="next"><span class="art-item-right" aria-hidden="true"><h6>下一篇&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></h6><h4><a href="/article/Shell-Echo-Colour.html" rel="prev" title="Echo-颜色">Echo-颜色</a></h4><h6 class="tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp; <a class="tag" href="/tags/Centos/">Centos</a>, <a class="tag" href="/tags/Shell/">Shell</a></h6></span></section></div></section></article><br><article class="post white-box comments"><section class="article typo"><div class="recommended_posts"><h4><i class="fa fa-bookmark fa-fw" aria-hidden="true"></i>&nbsp;文章推荐</h4><ul><li><a href="https://hyiqie.com/article/Docker-make-image-2.html">Docker-image（Dockerfile）</a></li><li><a href="https://hyiqie.com/article/Docker-make-image-1.html">Docker-image（commit|export|save）</a></li><li><a href="https://hyiqie.com/article/Shell-Echo-Colour.html">Echo-颜色</a></li><li><a href="https://hyiqie.com/article/Debian-DHCP-Relay.html">Debian-DHCP-Relay</a></li><li><a href="https://hyiqie.com/article/Debian-DHCP-Use.html">Debian-DHCP</a></li></ul></div><h4><i class="fa fa-comments fa-fw" aria-hidden="true"></i>&nbsp;发表评论</h4><div class="subtitle"><h6><b>文明评论，请勿灌水。</b>为防止恶意评论，请<b>登录账号</b>后发表评论</h6><div><section id="comments"><div id="SOHUCS" sid=""></div></section><script charset="utf-8" src="https://www.hyiqie.com/js/changyan.js"></script></div></div></section></article><script>window.subData = {
+        title: 'Docker-环境-Privileges',
+        tools: true
+    }</script></div><aside class="l_side"></aside></div></div><footer id="footer" class="clearfix"><div class="footer-copyright"><span>Copyright&nbsp;&copy;&nbsp;2019-2021； <a target="_blank" href="https://beian.miit.gov.cn/">工信备案号:琼ICP备18000058号</a>;<div></div></span> <span id="busuanzi_container_site_pv">| 本站总访问量<span id="busuanzi_value_site_pv">(统计中...)</span>次</span> <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv">(统计中...)</span>人</span> <span class="post-meta-divider">|</span></div><span id="runtime_span"></span><script>function show_runtime(){
+  window.setTimeout("show_runtime()",1000);
+  X=new Date("1/29/2019 1:1:1");
+  Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;
+  a=T/M;A=Math.floor(a);
+  b=(a-A)*24;B=Math.floor(b);
+  c=(b-B)*60;C=Math.floor((b-B)*60);
+  D=Math.floor((c-C)*60);
+  runtime_span.innerHTML="—— 本站已苟活： "+A+"天"+B+"小时"+C+"分"+D+"秒 ——"}show_runtime();</script><div class="footer-hr"></div></footer><script async src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/footer.js"></script><script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><script src="/js/back.top.js"></script><script src="/js/cover.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-1.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-2.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-3.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-4.js"></script><script>document.onkeydown = function(e) {
+    var isie = (document.all) ? true: false;
+    var key;
+    var ev;
+    if (isie) { 
+        key = window.event.keyCode;
+        ev = window.event;
+    } else { 
+        key = e.which;
+        ev = e;
+    }
+    if (key == 9) { 
+        if (isie) {
+            ev.keyCode = 0;
+            ev.returnValue = false;
+        } else {
+            ev.which = 0;
+            ev.preventDefault();
+        }
+    }
+};</script><script defer>var url = window.location.href;
+if(url.indexOf("/page/") >= 0 ) { 
+    
+    document.getElementById("carousel-yc").style.display = "none";
+    
+}</script><script>$(".zdya").each(function(){
+       var len=$(this).text().length; 
+       var kuan=document.body.scrollWidth;
+
+       if(len>30 && kuan>700){
+           var str="";
+           str=$(this).text().substring(0,90)+"...";
+           $(this).html(str);                   
+       }else if (len>30 && kuan<700) {
+            var str="";
+           str=$(this).text().substring(0,80)+"...";
+           $(this).html(str);                   
+       }
+    });</script><script src="/js/jquery.fitvids.js"></script><script>var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+        var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+        var ALGOLIA_API_KEY = "";
+        var ALGOLIA_APP_ID = "";
+        var ALGOLIA_INDEX_NAME = "";
+        var AZURE_SERVICE_NAME = "";
+        var AZURE_INDEX_NAME = "";
+        var AZURE_QUERY_KEY = "";
+        var BAIDU_API_ID = "";
+        var SEARCH_SERVICE = "hexo" || "hexo";
+        var ROOT = "/"||"/";
+        if(!ROOT.endsWith('/'))ROOT += '/';</script><script src="/js/search.js"></script><script src="/js/app.js"></script><script>window.changyan.api.config({
+    appid: 'cytem0G0F',
+    conf: 'prod_a9e68afa064236007944e671fb9d46e8'
+    });</script><script>(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-7.js';
+    }
+    else {
+        bp.src = 'https://hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-8.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();</script><script>var mySwiper = new Swiper ('.swiper-container', {
+    effect: 'slide',
+    loop: true, 
+    autoplay: true,
+    pagination: {
+      el: '.swiper-pagination',
+    },
+  
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    
+  })</script><script>document.body.oncopy = function() { 
+swal(
+{        title: "复制成功",
+        text: "如需转载文章请注意声明原文出处，谢谢合作！",
+        timer: 2000,
+        showConfirmButton: false});
+};</script><script>document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState == 'hidden') {
+        normal_title = document.title;
+        document.title = '祝我年少有为';
+    } else document.title = normal_title;
+});</script><script>(function(T,h,i,n,k,P,a,g,e){g=function(){P=h.createElement(i);a=h.getElementsByTagName(i)[0];P.src=k;P.charset="utf-8";P.async=1;a.parentNode.insertBefore(P,a)};T["ThinkPageWeatherWidgetObject"]=n;T[n]||(T[n]=function(){(T[n].q=T[n].q||[]).push(arguments)});T[n].l=+new Date();if(T.attachEvent){T.attachEvent("onload",g)}else{T.addEventListener("load",g,false)}}(window,document,"script","tpwidget","//widget.seniverse.com/widget/chameleon.js"))</script><script>tpwidget("init", {
+    "flavor": "bubble",
+    "location": "WX4FBXXFKE4F",
+    "geolocation": "enabled",
+    "position": "top-right",
+    "margin": "80px 40px",
+    "language": "zh-chs",
+    "unit": "c",
+    "theme": "chameleon",
+    "uid": "UF9D50315B",
+    "hash": "1538686c3447922b81705a019b95c6af"
+});
+tpwidget("show");</script><div class="cover"></div></body>

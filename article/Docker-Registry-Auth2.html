@@ -1,0 +1,211 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Docker-私有仓库-密码认证（+证书）-何宇航-on line</title><meta name="description" content="部分业余记录的博客-何宇航"><meta name="keywords" content="linux;windows;debian;centos;cisco;网络系统管理;skills39;worldskills;skills53;jam;gameday;aws;云计算;公有云;何宇航"><meta name="HandheldFriendly" content="True"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="google-site-verification" content="q4xnHYM3-sVfNnyEwMGqknU2CTdojzJvQ5nGfN3EJv8"><link rel="shortcut icon" href="/favicon.ico"><link rel="icon" href="/img/icon.png"><link rel="stylesheet" href="//cdn.staticfile.org/font-awesome/5.5.0/css/all.css"><link rel="stylesheet" href="//hyiqie.oss-cn-beijing.aliyuncs.com/js/head1.css"><link rel="stylesheet" href="/style.css"></head></html><body class="l_body"><div classdivclass="d_out" onmouseover="this.className='d_over'" onmouseout="this.className='d_out'"><a title="飞回顶部" href="#0" class="cd-top">Top</a></div><header class="l_header" id="no-header"><div class="wrapper"><div class="nav-main container container--flex"><a class="logo flat-box" href="/"><img class="xwbk-logo" src="/img/worldskills-logo.png"></a><div class="menu"><ul class="h-list"><li><a class="nav-home flat-box" href="/">文章</a></li><li><a class="nav-archives flat-box" href="/archives/index.html">归档</a></li><li><a class="nav- flat-box" href="http://baidu.hyiqie.com/">会百度</a></li><li><a class="nav-public-website flat-box" href="/public-website/website.html">收集</a></li></ul></div><div class="m_search"><form name="searchform" class="form u-search-form"><input type="text" class="input u-search-input" placeholder="搜索内容"> <span class="icon"><i class="fa fa-search fa-fw"></i></span></form></div><ul class="switcher h-list"><li class="s-search"><a class="fa fa-search fa-fw" href="javascript:void(0)"></a></li>&nbsp;&nbsp;<li class="s-menu"><a class="fa fa-bars fa-fw" href="javascript:void(0)"></a></li>&nbsp;&nbsp;</ul></div><div class="nav-sub container container--flex"><a class="logo" href="javascript:void(0)"></a></div></div></header><aside class="menu-phone"><nav><ul><li><a class="nav-home flat-box nav flat-box" href="/">文章</a></li><li><a class="nav-archives flat-box nav flat-box" href="/archives/index.html">归档</a></li><li><a class="nav- flat-box nav flat-box" href="http://baidu.hyiqie.com/">会百度</a></li><li><a class="nav-public-website flat-box nav flat-box" href="/public-website/website.html">收集</a></li></ul></nav></aside><div><div class="container2 clearfix2"><div class="l_main"><article id="post-Docker-Registry-Auth2" class="post white-box article-type-post" itemscope itemprop="blogPost"><section class="meta"><h1 class="title"><center>Docker-私有仓库-密码认证（+证书）</center></h1><center><time><i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp; <span>发表于</span>2019-05-13-星期一&nbsp;&nbsp;|&nbsp;&nbsp; <i class="fas fa-eye fa-fw" aria-hidden="true"></i>&nbsp; <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv">(统计中...)</span>次</span></time></center></section><section class="article typo"><div class="article-entry" itemprop="articleBody"><aside class="l_side2"><section class="m_widget toc-wrapper"><header class="header xuxian"><div style="font-size: 18px">目录</div><div class="wrapper"><a style="margin-right: 30px" class="s-toc rightBtn" title="固定到顶部" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div></header><div class="content"><ul class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#搭建密码认证的私有仓库-如果想要使用就带证书-否则不安全"><span class="toc-text">搭建密码认证的私有仓库(如果想要使用就带证书,否则不安全)</span></a><ul class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-创建密码文件以及环境介绍"><span class="toc-text">1. 创建密码文件以及环境介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-启动私有仓库"><span class="toc-text">2. 启动私有仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-测试"><span class="toc-text">3. 测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-整合-证书-密码"><span class="toc-text">4. 整合(证书+密码)</span></a><ul class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-服务器"><span class="toc-text">4.1 服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-客户端"><span class="toc-text">4.2 客户端</span></a></li></ul></li></ul></li></ul></div></section></aside><aside class="l_side2"><div id="toc-div" class="content"></div></aside><h1 id="搭建密码认证的私有仓库-如果想要使用就带证书-否则不安全"><a href="#搭建密码认证的私有仓库-如果想要使用就带证书-否则不安全" class="headerlink" title="搭建密码认证的私有仓库(如果想要使用就带证书,否则不安全)"></a>搭建密码认证的私有仓库(如果想要使用就带证书,否则不安全)</h1><center>我的环境是Centos7.4!2台服务器:Server、Client(docker版本为1.13.1)</center><br><center>192.168.237.130-<code>server</code>|192.168.237.132-<code>server-2</code></center><pre>
+<center><code2>↓操作</code2></center>
+服务端:
+1.创建一个带帐号和密码的文件.
+2.启动仓库（指定认证类型和认证的密码文件）.
+客户端:
+1.使用login登录仓库就可以访问了.
+</pre><p><center><code2>↓原文出自</code2></center><br>超详细记录公司多用户Docker仓库创建安全认证和应用：<a href="https://blog.csdn.net/dream_an/article/details/58005324" target="_blank" rel="noopener">https://blog.csdn.net/dream_an/article/details/58005324</a></p><h2 id="1-创建密码文件以及环境介绍"><a href="#1-创建密码文件以及环境介绍" class="headerlink" title="1. 创建密码文件以及环境介绍"></a>1. 创建密码文件以及环境介绍</h2><pre>
+<center><code2>↓创建密码文件.</code2></center>
+[root@server ~]# <code>mkdir /etc/docker/auth</code>
+[root@server ~]# <code>docker run --entrypoint htpasswd docker.io/registry:latest -Bbn hyiqie 123456 >/etc/docker/auth/htpasswd</code>
+<center><code2>↓Docker环境.</code2></center>
+[root@server ~]# <code>docker version</code>
+Client:
+ Version:         1.13.1
+ API version:     1.26
+ Package version: docker-1.13.1-96.gitb2f74b2.el7.centos.x86_64
+ Go version:      go1.10.3
+ Git commit:      b2f74b2/1.13.1
+ Built:           Wed May  1 14:55:20 2019
+ OS/Arch:         linux/amd64
+
+Server:
+ Version:         1.13.1
+ API version:     1.26 (minimum version 1.12)
+ Package version: docker-1.13.1-96.gitb2f74b2.el7.centos.x86_64
+ Go version:      go1.10.3
+ Git commit:      b2f74b2/1.13.1
+ Built:           Wed May  1 14:55:20 2019
+ OS/Arch:         linux/amd64
+ Experimental:    false
+[root@server ~]# <code>docker images</code>
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+192.168.237.130:5000/nginx   latest              53f3fd8007f7        5 days ago          109 MB
+docker.io/nginx              latest              53f3fd8007f7        5 days ago          109 MB
+docker.io/registry           latest              f32a97de94e1        2 months ago        25.8 MB
+</pre><h2 id="2-启动私有仓库"><a href="#2-启动私有仓库" class="headerlink" title="2. 启动私有仓库"></a>2. 启动私有仓库</h2><pre>
+<center><code2>↓启动私有仓库.</code2></center>
+[root@server ~]# <code>docker run -d -p 5000:5000 --restart=always --name registry \
+-v /data/registry/:/var/lib/registry/ \
+-v /etc/docker/auth/:/auth/ \
+-e REGISTRY_AUTH=htpasswd \
+-e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" \
+-e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \
+docker.io/registry:latest</code>
+c894b1c4c8a20973d6ebd528841e0d3f61642116e2a1b00dd5c7dc5399715d4a
+</pre><h2 id="3-测试"><a href="#3-测试" class="headerlink" title="3. 测试"></a>3. 测试</h2><pre>
+<center><code2>↓允许使用不安全仓库（因为没配置证书,只能用http.）.</code2></center>
+[root@server ~]# <code>vim /etc/docker/daemon.json</code>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"insecure-registries"</span>:[<span class="string">"192.168.237.130:5000"</span>],               #加入这一句即可:允许使用不安全的仓库地址.</span><br><span class="line">  <span class="string">"registry-mirrors"</span>: [<span class="string">"https://xxx.mirror.aliyuncs.com"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<center><code2>↓重启Docker让配置生效.</code2></center>
+[root@server ~]# <code>systemctl restart docker</code>
+<center><code2>↓上传失败（因为没登录）.</code2></center>
+[root@server ~]# <code>docker push 192.168.237.130:5000/nginx:latest</code>
+The push refers to a repository [192.168.237.130:5000/nginx]
+332fa54c5886: Preparing 
+6ba094226eea: Preparing 
+6270adb5794c: Preparing 
+no basic auth credentials
+<center><code2>↓登录私有仓库.</code2></center>
+[root@server ~]# <code>docker login 192.168.237.130:5000</code>
+Username: <code>hyiqie</code>
+Password: <code>123456</code>
+Login Succeeded
+<center><code2>↓上传成功.</code2></center>
+[root@server ~]# <code>docker push 192.168.237.130:5000/nginx:latest</code>
+The push refers to a repository [192.168.237.130:5000/nginx]
+332fa54c5886: Pushed 
+6ba094226eea: Pushed 
+6270adb5794c: Pushed 
+latest: digest: sha256:e770165fef9e36b990882a4083d8ccf5e29e469a8609bb6b2e3b47d9510e2c8d size: 948
+<center><code2>↓查询失败.</code2></center>
+[root@server ~]# <code>curl https://192.168.237.130:5000/v2/_catalog -k</code>
+{"errors":[{"code":"UNAUTHORIZED","message":"authentication required","detail":[{"Type":"registry","Class":"","Name":"catalog",
+"Action":"*"}]}]}
+<center><code2>↓设置帐号密码后查询成功.</code2></center>
+[root@server ~]# <code>curl https://192.168.237.130:5000/v2/_catalog -k -u hyiqie:123456</code>
+{"repositories":["nginx"]}
+</pre><h2 id="4-整合-证书-密码"><a href="#4-整合-证书-密码" class="headerlink" title="4. 整合(证书+密码)"></a>4. 整合(证书+密码)</h2><p><center><code3>↓↓说明↓↓</code3></center></p><p><code3>将证书认证和密码认证配置在一起</code3></p><h3 id="4-1-服务器"><a href="#4-1-服务器" class="headerlink" title="4.1 服务器"></a>4.1 服务器</h3><pre>
+[root@server ~]# <code>mkdir /etc/docker/certs.d/192.168.237.130:5000</code>
+[root@server ~]# <code>mkdir /etc/docker/auth</code>
+[root@server ~]# <code>cp cacert.pem /etc/docker/certs.d/192.168.237.130\:5000/ca.crt</code>
+[root@server ~]# <code>cp new* /etc/docker/certs.d/</code>
+[root@server ~]# <code>docker run --entrypoint htpasswd docker.io/registry:latest -Bbn hyiqie 123456 >/etc/docker/auth/htpasswd</code>
+[root@server ~]# <code>docker run -d -p 5000:5000 --restart=always --name registry \
+-v /data/registry/:/var/lib/registry/ \
+-v /etc/docker/certs.d/:/certs.d/ \
+-v /etc/docker/auth/:/auth/ \
+-e REGISTRY_HTTP_TLS_CERTIFICATE=/certs.d/newcert.pem \
+-e REGISTRY_HTTP_TLS_KEY=/certs.d/newreq.pem \
+-e REGISTRY_AUTH=htpasswd \
+-e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" \
+-e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \
+docker.io/registry:latest</code>
+44db15e69d3fb81e202ec4672c1c7e44508af950aabc123c2f47fdedcb101819
+</pre><h3 id="4-2-客户端"><a href="#4-2-客户端" class="headerlink" title="4.2 客户端"></a>4.2 客户端</h3><pre>
+[root@server-2 ~]# <code>scp -r 192.168.237.130:/etc/docker/certs.d/192.168.237.130:5000 /etc/docker/certs.d/</code>
+root@192.168.237.130's password:<code>123456</code> 
+ca.crt                                                                    100% 4295   915.7KB/s   00:00   
+</pre></div><br><br><section class="meta"><time itemprop="dateUpdated" datetime="2019-07-02T12:05:06+08:00" content="2019-07-02-星期二"><span class="latup-time"><i class="fas fa-pen fa-fw" aria-hidden="true"></i> 本文最后更新于：2019-07-02-星期二</span></time></section><div style="text-align: right"><a href="javascript:" onclick="window.open('http://service.weibo.com/share/share.php?url=https://hyiqie.com&sharesource=weibo&title=Docker-私有仓库-密码认证（+证书）：Docker-私有仓库-密码认证（+证书）给Docker私有仓库加上认证（密码）保证仓库安全性....&pic=https://hyiqie.com/img/worldskills-logo.png&appkey=2706825840','','height=400,width=711,left=100,right=100,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-weibo.png"></a>&nbsp;&nbsp; <a href="javascript:" onclick="window.open('https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://hyiqie.com&sharesource=qzone&title=Docker-私有仓库-密码认证（+证书）&pics=https://hyiqie.com/img/worldskills-logo.png&summary=给Docker私有仓库加上认证（密码）保证仓库安全性....','','height=598,width=711,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-qzone.png"></a>&nbsp;&nbsp; <a href="javascript:" onclick="window.open('http://connect.qq.com/widget/shareqq/index.html?url=https://hyiqie.com&title=Docker-私有仓库-密码认证（+证书）&pics=https://hyiqie.com/img/worldskills-logo.png&summary=何宇航-on line&desc=给Docker私有仓库加上认证（密码）保证仓库安全性....','','height=598,width=711,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-qq.png"></a>&nbsp;&nbsp;</div><div class="article-tags tags"><a href="/tags/Centos/"><i class="fa fa-tag fa-fw" aria-hidden="true"></i>&nbsp;Centos</a>&nbsp; <a href="/tags/Docker/"><i class="fa fa-tag fa-fw" aria-hidden="true"></i>&nbsp;Docker</a>&nbsp;</div><div class="prev-next"><section class="prev"><span class="art-item-left"><h6><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;上一篇</h6><h4><a href="/article/Docker-CE-Install.html" rel="prev" title="Docker-CE的安装">Docker-CE的安装</a></h4><h6 class="tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp; <a class="tag" href="/tags/Centos/">Centos</a>, <a class="tag" href="/tags/Docker/">Docker</a></h6></span></section><section class="next"><span class="art-item-right" aria-hidden="true"><h6>下一篇&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></h6><h4><a href="/article/Docker-Registry-Auth.html" rel="prev" title="Docker-私有仓库-证书认证">Docker-私有仓库-证书认证</a></h4><h6 class="tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp; <a class="tag" href="/tags/Centos/">Centos</a>, <a class="tag" href="/tags/Docker/">Docker</a></h6></span></section></div></section></article><br><article class="post white-box comments"><section class="article typo"><div class="recommended_posts"><h4><i class="fa fa-bookmark fa-fw" aria-hidden="true"></i>&nbsp;文章推荐</h4><ul><li><a href="https://hyiqie.com/article/Docker-Compose.html">Docker-Compose</a></li><li><a href="https://hyiqie.com/article/Docker-CE-Install.html">Docker-CE的安装</a></li><li><a href="https://hyiqie.com/article/Docker-Registry-Auth.html">Docker-私有仓库-证书认证</a></li><li><a href="https://hyiqie.com/article/K8S-container-upgrade.html">K8S-容器升级和回滚</a></li><li><a href="https://hyiqie.com/article/K8S-backend-network.html">K8S-外部网络</a></li></ul></div><h4><i class="fa fa-comments fa-fw" aria-hidden="true"></i>&nbsp;发表评论</h4><div class="subtitle"><h6><b>文明评论，请勿灌水。</b>为防止恶意评论，请<b>登录账号</b>后发表评论</h6><div><section id="comments"><div id="SOHUCS" sid=""></div></section><script charset="utf-8" src="https://www.hyiqie.com/js/changyan.js"></script></div></div></section></article><script>window.subData = {
+        title: 'Docker-私有仓库-密码认证（+证书）',
+        tools: true
+    }</script></div><aside class="l_side"></aside></div></div><footer id="footer" class="clearfix"><div class="footer-copyright"><span>Copyright&nbsp;&copy;&nbsp;2019-2021； <a target="_blank" href="https://beian.miit.gov.cn/">工信备案号:琼ICP备18000058号</a>;<div></div></span> <span id="busuanzi_container_site_pv">| 本站总访问量<span id="busuanzi_value_site_pv">(统计中...)</span>次</span> <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv">(统计中...)</span>人</span> <span class="post-meta-divider">|</span></div><span id="runtime_span"></span><script>function show_runtime(){
+  window.setTimeout("show_runtime()",1000);
+  X=new Date("1/29/2019 1:1:1");
+  Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;
+  a=T/M;A=Math.floor(a);
+  b=(a-A)*24;B=Math.floor(b);
+  c=(b-B)*60;C=Math.floor((b-B)*60);
+  D=Math.floor((c-C)*60);
+  runtime_span.innerHTML="—— 本站已苟活： "+A+"天"+B+"小时"+C+"分"+D+"秒 ——"}show_runtime();</script><div class="footer-hr"></div></footer><script async src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/footer.js"></script><script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><script src="/js/back.top.js"></script><script src="/js/cover.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-1.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-2.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-3.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-4.js"></script><script>document.onkeydown = function(e) {
+    var isie = (document.all) ? true: false;
+    var key;
+    var ev;
+    if (isie) { 
+        key = window.event.keyCode;
+        ev = window.event;
+    } else { 
+        key = e.which;
+        ev = e;
+    }
+    if (key == 9) { 
+        if (isie) {
+            ev.keyCode = 0;
+            ev.returnValue = false;
+        } else {
+            ev.which = 0;
+            ev.preventDefault();
+        }
+    }
+};</script><script defer>var url = window.location.href;
+if(url.indexOf("/page/") >= 0 ) { 
+    
+    document.getElementById("carousel-yc").style.display = "none";
+    
+}</script><script>$(".zdya").each(function(){
+       var len=$(this).text().length; 
+       var kuan=document.body.scrollWidth;
+
+       if(len>30 && kuan>700){
+           var str="";
+           str=$(this).text().substring(0,90)+"...";
+           $(this).html(str);                   
+       }else if (len>30 && kuan<700) {
+            var str="";
+           str=$(this).text().substring(0,80)+"...";
+           $(this).html(str);                   
+       }
+    });</script><script src="/js/jquery.fitvids.js"></script><script>var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+        var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+        var ALGOLIA_API_KEY = "";
+        var ALGOLIA_APP_ID = "";
+        var ALGOLIA_INDEX_NAME = "";
+        var AZURE_SERVICE_NAME = "";
+        var AZURE_INDEX_NAME = "";
+        var AZURE_QUERY_KEY = "";
+        var BAIDU_API_ID = "";
+        var SEARCH_SERVICE = "hexo" || "hexo";
+        var ROOT = "/"||"/";
+        if(!ROOT.endsWith('/'))ROOT += '/';</script><script src="/js/search.js"></script><script src="/js/app.js"></script><script>window.changyan.api.config({
+    appid: 'cytem0G0F',
+    conf: 'prod_a9e68afa064236007944e671fb9d46e8'
+    });</script><script>(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-7.js';
+    }
+    else {
+        bp.src = 'https://hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-8.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();</script><script>var mySwiper = new Swiper ('.swiper-container', {
+    effect: 'slide',
+    loop: true, 
+    autoplay: true,
+    pagination: {
+      el: '.swiper-pagination',
+    },
+  
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    
+  })</script><script>document.body.oncopy = function() { 
+swal(
+{        title: "复制成功",
+        text: "如需转载文章请注意声明原文出处，谢谢合作！",
+        timer: 2000,
+        showConfirmButton: false});
+};</script><script>document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState == 'hidden') {
+        normal_title = document.title;
+        document.title = '祝我年少有为';
+    } else document.title = normal_title;
+});</script><script>(function(T,h,i,n,k,P,a,g,e){g=function(){P=h.createElement(i);a=h.getElementsByTagName(i)[0];P.src=k;P.charset="utf-8";P.async=1;a.parentNode.insertBefore(P,a)};T["ThinkPageWeatherWidgetObject"]=n;T[n]||(T[n]=function(){(T[n].q=T[n].q||[]).push(arguments)});T[n].l=+new Date();if(T.attachEvent){T.attachEvent("onload",g)}else{T.addEventListener("load",g,false)}}(window,document,"script","tpwidget","//widget.seniverse.com/widget/chameleon.js"))</script><script>tpwidget("init", {
+    "flavor": "bubble",
+    "location": "WX4FBXXFKE4F",
+    "geolocation": "enabled",
+    "position": "top-right",
+    "margin": "80px 40px",
+    "language": "zh-chs",
+    "unit": "c",
+    "theme": "chameleon",
+    "uid": "UF9D50315B",
+    "hash": "1538686c3447922b81705a019b95c6af"
+});
+tpwidget("show");</script><div class="cover"></div></body>

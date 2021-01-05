@@ -1,0 +1,165 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Docker-image（commit|export|save）-何宇航-on line</title><meta name="description" content="部分业余记录的博客-何宇航"><meta name="keywords" content="linux;windows;debian;centos;cisco;网络系统管理;skills39;worldskills;skills53;jam;gameday;aws;云计算;公有云;何宇航"><meta name="HandheldFriendly" content="True"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="google-site-verification" content="q4xnHYM3-sVfNnyEwMGqknU2CTdojzJvQ5nGfN3EJv8"><link rel="shortcut icon" href="/favicon.ico"><link rel="icon" href="/img/icon.png"><link rel="stylesheet" href="//cdn.staticfile.org/font-awesome/5.5.0/css/all.css"><link rel="stylesheet" href="//hyiqie.oss-cn-beijing.aliyuncs.com/js/head1.css"><link rel="stylesheet" href="/style.css"></head></html><body class="l_body"><div classdivclass="d_out" onmouseover="this.className='d_over'" onmouseout="this.className='d_out'"><a title="飞回顶部" href="#0" class="cd-top">Top</a></div><header class="l_header" id="no-header"><div class="wrapper"><div class="nav-main container container--flex"><a class="logo flat-box" href="/"><img class="xwbk-logo" src="/img/worldskills-logo.png"></a><div class="menu"><ul class="h-list"><li><a class="nav-home flat-box" href="/">文章</a></li><li><a class="nav-archives flat-box" href="/archives/index.html">归档</a></li><li><a class="nav- flat-box" href="http://baidu.hyiqie.com/">会百度</a></li><li><a class="nav-public-website flat-box" href="/public-website/website.html">收集</a></li></ul></div><div class="m_search"><form name="searchform" class="form u-search-form"><input type="text" class="input u-search-input" placeholder="搜索内容"> <span class="icon"><i class="fa fa-search fa-fw"></i></span></form></div><ul class="switcher h-list"><li class="s-search"><a class="fa fa-search fa-fw" href="javascript:void(0)"></a></li>&nbsp;&nbsp;<li class="s-menu"><a class="fa fa-bars fa-fw" href="javascript:void(0)"></a></li>&nbsp;&nbsp;</ul></div><div class="nav-sub container container--flex"><a class="logo" href="javascript:void(0)"></a></div></div></header><aside class="menu-phone"><nav><ul><li><a class="nav-home flat-box nav flat-box" href="/">文章</a></li><li><a class="nav-archives flat-box nav flat-box" href="/archives/index.html">归档</a></li><li><a class="nav- flat-box nav flat-box" href="http://baidu.hyiqie.com/">会百度</a></li><li><a class="nav-public-website flat-box nav flat-box" href="/public-website/website.html">收集</a></li></ul></nav></aside><div><div class="container2 clearfix2"><div class="l_main"><article id="post-Docker-make-image-1" class="post white-box article-type-post" itemscope itemprop="blogPost"><section class="meta"><h1 class="title"><center>Docker-image（commit|export|save）</center></h1><center><time><i class="fas fa-calendar-alt" aria-hidden="true"></i>&nbsp; <span>发表于</span>2019-04-10-星期三&nbsp;&nbsp;|&nbsp;&nbsp; <i class="fas fa-eye fa-fw" aria-hidden="true"></i>&nbsp; <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv">(统计中...)</span>次</span></time></center></section><section class="article typo"><div class="article-entry" itemprop="articleBody"><aside class="l_side2"><section class="m_widget toc-wrapper"><header class="header xuxian"><div style="font-size: 18px">目录</div><div class="wrapper"><a style="margin-right: 30px" class="s-toc rightBtn" title="固定到顶部" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div></header><div class="content"><ul class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#将Docker容器导出成镜像的方式"><span class="toc-text">将Docker容器导出成镜像的方式</span></a><ul class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Export-将容器导出成镜像"><span class="toc-text">1. Export-将容器导出成镜像</span></a><ul class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-下载镜像并启动"><span class="toc-text">1.1 下载镜像并启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-取一个百度首页替换nginx的index"><span class="toc-text">1.2 取一个百度首页替换nginx的index</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-把目前的Nginx容器导出来"><span class="toc-text">1.3 把目前的Nginx容器导出来</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-导入镜像"><span class="toc-text">1.4 导入镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-导入镜像并运行"><span class="toc-text">1.5 导入镜像并运行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-6-测试"><span class="toc-text">1.6 测试</span></a></li></ul></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Commit-将容器导出成镜像"><span class="toc-text">2. Commit-将容器导出成镜像</span></a><ul class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-直接使用commit命令将容器导成镜像并查看"><span class="toc-text">2.1 直接使用commit命令将容器导成镜像并查看</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-运行并测试"><span class="toc-text">2.2 运行并测试</span></a></li></ul></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Save-将镜像下载到本地"><span class="toc-text">3. Save-将镜像下载到本地</span></a></li></ul></li></ul></div></section></aside><aside class="l_side2"><div id="toc-div" class="content"></div></aside><h1 id="将Docker容器导出成镜像的方式"><a href="#将Docker容器导出成镜像的方式" class="headerlink" title="将Docker容器导出成镜像的方式"></a>将Docker容器导出成镜像的方式</h1><center>我的环境是Centos7.4!1台服务器:Server</center><br><center>192.168.237.128-<code>server</code></center><pre>
+1.使用docker history docker.io/nginx 可以查看镜像是如何制作的.
+
+</pre><h2 id="1-Export-将容器导出成镜像"><a href="#1-Export-将容器导出成镜像" class="headerlink" title="1. Export-将容器导出成镜像"></a>1. Export-将容器导出成镜像</h2><h3 id="1-1-下载镜像并启动"><a href="#1-1-下载镜像并启动" class="headerlink" title="1.1 下载镜像并启动"></a>1.1 下载镜像并启动</h3><pre>
+[root@server ~]# <code>docker pull nginx</code>
+[root@server ~]# <code>docker run --restart=always -itd -p 80:80 docker.io/nginx</code>
+f39a583e724c1a664a5c6c156eb4ea7dce32c8b166abde088f2a2bb80a944134
+</pre><h3 id="1-2-取一个百度首页替换nginx的index"><a href="#1-2-取一个百度首页替换nginx的index" class="headerlink" title="1.2 取一个百度首页替换nginx的index"></a>1.2 取一个百度首页替换nginx的index</h3><pre>
+<center><code2>↓获取百度的index.html页面</code2></center>
+[root@server ~]# <code>wget www.baidu.com/index.html</code>
+[root@server ~]# <code>docker cp index.html f39a583e724c:/usr/share/nginx/html/index.html</code>
+</pre><h3 id="1-3-把目前的Nginx容器导出来"><a href="#1-3-把目前的Nginx容器导出来" class="headerlink" title="1.3 把目前的Nginx容器导出来"></a>1.3 把目前的Nginx容器导出来</h3><pre>
+<center><code2>↓不加-o则镜像在/var/lib/docker/image/overlay2/下（使用export的时候会把内部的信息弄丢失,但是磁盘里的数据不会.）</code2></center>
+[root@server ~]# <code>docker export -o nginx_v1.tar f39a583e724c</code>
+<center><code2>↓查看导出情况</code2></center>
+[root@server ~]# <code>ls nginx_v1.tar  -lh</code>
+-rw------- 1 root root 107M Apr 10 05:35 nginx_v1.tar
+</pre><h3 id="1-4-导入镜像"><a href="#1-4-导入镜像" class="headerlink" title="1.4 导入镜像"></a>1.4 导入镜像</h3><h3 id="1-5-导入镜像并运行"><a href="#1-5-导入镜像并运行" class="headerlink" title="1.5 导入镜像并运行"></a>1.5 导入镜像并运行</h3><pre>
+<center><code2>↓导入镜像</code2></center>
+[root@server ~]# <code>docker import nginx_v1.tar nginx:v3</code>
+sha256:dbbe9d9bda44e78d176b8d1a1ad92d6e0a067e01273569618aa9fd392c081806
+<center><code2>↓导入出错：镜像文件启动命令丢失导致(因为用的是export出来的镜像,所以有些信息会丢失.）</code2></center>
+[root@server ~]# <code>docker run --restart=always -itd -p 80:80 nginx:v3</code>
+/usr/bin/docker-current: Error response from daemon: No command specified.
+See '/usr/bin/docker-current run --help'.
+<center><code2>↓所以我们在后面加入启动参数</code2></center>
+[root@server ~]# <code>docker run --restart=always -itd -p 80:80 nginx:v3 /bin/bash</code>
+073701c4ae1b9a1cce34d53cd720955305ebe4da866e060b523038e8333edc25
+<center><code2>↓重新进入容器手动启动nginx</code2></center>
+[root@server ~]# <code>docker exec -it 073701c4ae1b /bin/bash</code>
+root@073701c4ae1b:/# <code>nginx</code>
+</pre><h3 id="1-6-测试"><a href="#1-6-测试" class="headerlink" title="1.6 测试"></a>1.6 测试</h3><pre>
+<center><code2>↓内部Nginx启动成功:成功映射到外部.</code2></center>
+<img src="http://hyiqie.oss-cn-beijing.aliyuncs.com/cto/2019-4-10_1.png" alt="无法显示" title="访问成功.">
+</pre><h2 id="2-Commit-将容器导出成镜像"><a href="#2-Commit-将容器导出成镜像" class="headerlink" title="2. Commit-将容器导出成镜像"></a>2. Commit-将容器导出成镜像</h2><h3 id="2-1-直接使用commit命令将容器导成镜像并查看"><a href="#2-1-直接使用commit命令将容器导成镜像并查看" class="headerlink" title="2.1 直接使用commit命令将容器导成镜像并查看"></a>2.1 直接使用commit命令将容器导成镜像并查看</h3><pre>
+<center><code2>↓将容器变为镜像.</code2></center>
+[root@server ~]# <code>docker commit f39a583e724c docker.io/nginx:v1</code>
+sha256:d36626339046c31f456d0537d6e6843d166c29bc3d440c92d2f5237bac5d230e
+[root@server ~]# <code>docker images</code>
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+docker.io/nginx            v1                  d36626339046        6 minutes ago       109 MB
+<center><code2>↓顺便讲一下导出.</code2></center>
+[root@server ~]# <code>docker save -o nginx_v2.tar d36626339046</code>
+[root@server ~]# <code>ls -lh nginx_v2.tar</code>
+-rw------- 1 root root 108M Apr 10 08:15 nginx_v2.tar
+</pre><h3 id="2-2-运行并测试"><a href="#2-2-运行并测试" class="headerlink" title="2.2 运行并测试"></a>2.2 运行并测试</h3><pre>
+[root@server ~]# <code>docker run --restart=always -itd -p 8080:80 nginx:v1</code>
+df6e121272fdee1af67338e4d6abe00f44820e170d99cd0b97ceff6baa50da6c
+<img src="http://hyiqie.oss-cn-beijing.aliyuncs.com/cto/2019-4-10_2.png" alt="无法显示" title="访问成功.">
+</pre><h2 id="3-Save-将镜像下载到本地"><a href="#3-Save-将镜像下载到本地" class="headerlink" title="3. Save-将镜像下载到本地"></a>3. Save-将镜像下载到本地</h2><pre>
+<center><code2>↓将Image-ID为691a82db1ecd的镜像下载到宿主机.</code2></center>
+[root@client docker]# <code>docker save 691a82db1ecd -o kubernetes-dashboard-amd64.tar</code>
+[root@client docker]# <code>ls -lh kubernetes-dashboard-amd64.tar</code>
+-rw------- 1 root root 133M May  3 06:26 kubernetes-dashboard-amd64.tar
+</pre></div><br><br><section class="meta"><time itemprop="dateUpdated" datetime="2019-05-03T18:29:04+08:00" content="2019-05-03-星期五"><span class="latup-time"><i class="fas fa-pen fa-fw" aria-hidden="true"></i> 本文最后更新于：2019-05-03-星期五</span></time></section><div style="text-align: right"><a href="javascript:" onclick="window.open('http://service.weibo.com/share/share.php?url=https://hyiqie.com&sharesource=weibo&title=Docker-image（commit|export|save）：Docker-image（commit|export|save）二种将Docker容器导出成镜像的方式....&pic=https://hyiqie.com/img/worldskills-logo.png&appkey=2706825840','','height=400,width=711,left=100,right=100,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-weibo.png"></a>&nbsp;&nbsp; <a href="javascript:" onclick="window.open('https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://hyiqie.com&sharesource=qzone&title=Docker-image（commit|export|save）&pics=https://hyiqie.com/img/worldskills-logo.png&summary=二种将Docker容器导出成镜像的方式....','','height=598,width=711,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-qzone.png"></a>&nbsp;&nbsp; <a href="javascript:" onclick="window.open('http://connect.qq.com/widget/shareqq/index.html?url=https://hyiqie.com&title=Docker-image（commit|export|save）&pics=https://hyiqie.com/img/worldskills-logo.png&summary=何宇航-on line&desc=二种将Docker容器导出成镜像的方式....','','height=598,width=711,scrollbars=yes,status=yes')"><img style="display: inline; width:55px; height:55px" src="/img/share-qq.png"></a>&nbsp;&nbsp;</div><div class="article-tags tags"><a href="/tags/Centos/"><i class="fa fa-tag fa-fw" aria-hidden="true"></i>&nbsp;Centos</a>&nbsp; <a href="/tags/Docker/"><i class="fa fa-tag fa-fw" aria-hidden="true"></i>&nbsp;Docker</a>&nbsp;</div><div class="prev-next"><section class="prev"><span class="art-item-left"><h6><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;上一篇</h6><h4><a href="/article/Docker-make-image-2.html" rel="prev" title="Docker-image（Dockerfile）">Docker-image（Dockerfile）</a></h4><h6 class="tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp; <a class="tag" href="/tags/Centos/">Centos</a>, <a class="tag" href="/tags/Docker/">Docker</a></h6></span></section><section class="next"><span class="art-item-right" aria-hidden="true"><h6>下一篇&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></h6><h4><a href="/article/Docker-Privileges.html" rel="prev" title="Docker-环境-Privileges">Docker-环境-Privileges</a></h4><h6 class="tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp; <a class="tag" href="/tags/Centos/">Centos</a>, <a class="tag" href="/tags/Docker/">Docker</a></h6></span></section></div></section></article><br><article class="post white-box comments"><section class="article typo"><div class="recommended_posts"><h4><i class="fa fa-bookmark fa-fw" aria-hidden="true"></i>&nbsp;文章推荐</h4><ul><li><a href="https://hyiqie.com/article/Docker-Registry.html">Docker-私有仓库</a></li><li><a href="https://hyiqie.com/article/Docker-make-image-2.html">Docker-image（Dockerfile）</a></li><li><a href="https://hyiqie.com/article/Docker-Privileges.html">Docker-环境-Privileges</a></li><li><a href="https://hyiqie.com/article/Shell-Echo-Colour.html">Echo-颜色</a></li><li><a href="https://hyiqie.com/article/Debian-DHCP-Relay.html">Debian-DHCP-Relay</a></li></ul></div><h4><i class="fa fa-comments fa-fw" aria-hidden="true"></i>&nbsp;发表评论</h4><div class="subtitle"><h6><b>文明评论，请勿灌水。</b>为防止恶意评论，请<b>登录账号</b>后发表评论</h6><div><section id="comments"><div id="SOHUCS" sid=""></div></section><script charset="utf-8" src="https://www.hyiqie.com/js/changyan.js"></script></div></div></section></article><script>window.subData = {
+        title: 'Docker-image（commit|export|save）',
+        tools: true
+    }</script></div><aside class="l_side"></aside></div></div><footer id="footer" class="clearfix"><div class="footer-copyright"><span>Copyright&nbsp;&copy;&nbsp;2019-2021； <a target="_blank" href="https://beian.miit.gov.cn/">工信备案号:琼ICP备18000058号</a>;<div></div></span> <span id="busuanzi_container_site_pv">| 本站总访问量<span id="busuanzi_value_site_pv">(统计中...)</span>次</span> <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv">(统计中...)</span>人</span> <span class="post-meta-divider">|</span></div><span id="runtime_span"></span><script>function show_runtime(){
+  window.setTimeout("show_runtime()",1000);
+  X=new Date("1/29/2019 1:1:1");
+  Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;
+  a=T/M;A=Math.floor(a);
+  b=(a-A)*24;B=Math.floor(b);
+  c=(b-B)*60;C=Math.floor((b-B)*60);
+  D=Math.floor((c-C)*60);
+  runtime_span.innerHTML="—— 本站已苟活： "+A+"天"+B+"小时"+C+"分"+D+"秒 ——"}show_runtime();</script><div class="footer-hr"></div></footer><script async src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/footer.js"></script><script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><script src="/js/back.top.js"></script><script src="/js/cover.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-1.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-2.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-3.js"></script><script src="//hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-4.js"></script><script>document.onkeydown = function(e) {
+    var isie = (document.all) ? true: false;
+    var key;
+    var ev;
+    if (isie) { 
+        key = window.event.keyCode;
+        ev = window.event;
+    } else { 
+        key = e.which;
+        ev = e;
+    }
+    if (key == 9) { 
+        if (isie) {
+            ev.keyCode = 0;
+            ev.returnValue = false;
+        } else {
+            ev.which = 0;
+            ev.preventDefault();
+        }
+    }
+};</script><script defer>var url = window.location.href;
+if(url.indexOf("/page/") >= 0 ) { 
+    
+    document.getElementById("carousel-yc").style.display = "none";
+    
+}</script><script>$(".zdya").each(function(){
+       var len=$(this).text().length; 
+       var kuan=document.body.scrollWidth;
+
+       if(len>30 && kuan>700){
+           var str="";
+           str=$(this).text().substring(0,90)+"...";
+           $(this).html(str);                   
+       }else if (len>30 && kuan<700) {
+            var str="";
+           str=$(this).text().substring(0,80)+"...";
+           $(this).html(str);                   
+       }
+    });</script><script src="/js/jquery.fitvids.js"></script><script>var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+        var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+        var ALGOLIA_API_KEY = "";
+        var ALGOLIA_APP_ID = "";
+        var ALGOLIA_INDEX_NAME = "";
+        var AZURE_SERVICE_NAME = "";
+        var AZURE_INDEX_NAME = "";
+        var AZURE_QUERY_KEY = "";
+        var BAIDU_API_ID = "";
+        var SEARCH_SERVICE = "hexo" || "hexo";
+        var ROOT = "/"||"/";
+        if(!ROOT.endsWith('/'))ROOT += '/';</script><script src="/js/search.js"></script><script src="/js/app.js"></script><script>window.changyan.api.config({
+    appid: 'cytem0G0F',
+    conf: 'prod_a9e68afa064236007944e671fb9d46e8'
+    });</script><script>(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-7.js';
+    }
+    else {
+        bp.src = 'https://hyiqie.oss-cn-beijing.aliyuncs.com/js/scripts-8.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();</script><script>var mySwiper = new Swiper ('.swiper-container', {
+    effect: 'slide',
+    loop: true, 
+    autoplay: true,
+    pagination: {
+      el: '.swiper-pagination',
+    },
+  
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    
+  })</script><script>document.body.oncopy = function() { 
+swal(
+{        title: "复制成功",
+        text: "如需转载文章请注意声明原文出处，谢谢合作！",
+        timer: 2000,
+        showConfirmButton: false});
+};</script><script>document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState == 'hidden') {
+        normal_title = document.title;
+        document.title = '祝我年少有为';
+    } else document.title = normal_title;
+});</script><script>(function(T,h,i,n,k,P,a,g,e){g=function(){P=h.createElement(i);a=h.getElementsByTagName(i)[0];P.src=k;P.charset="utf-8";P.async=1;a.parentNode.insertBefore(P,a)};T["ThinkPageWeatherWidgetObject"]=n;T[n]||(T[n]=function(){(T[n].q=T[n].q||[]).push(arguments)});T[n].l=+new Date();if(T.attachEvent){T.attachEvent("onload",g)}else{T.addEventListener("load",g,false)}}(window,document,"script","tpwidget","//widget.seniverse.com/widget/chameleon.js"))</script><script>tpwidget("init", {
+    "flavor": "bubble",
+    "location": "WX4FBXXFKE4F",
+    "geolocation": "enabled",
+    "position": "top-right",
+    "margin": "80px 40px",
+    "language": "zh-chs",
+    "unit": "c",
+    "theme": "chameleon",
+    "uid": "UF9D50315B",
+    "hash": "1538686c3447922b81705a019b95c6af"
+});
+tpwidget("show");</script><div class="cover"></div></body>
